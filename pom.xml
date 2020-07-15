@@ -28,6 +28,9 @@
 	<packaging>pom</packaging>
 	<description>Integration test suite for mhus projects</description>
 	<url>http://www.mhus.info</url>
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
     
 	<licenses>
 		<license>
