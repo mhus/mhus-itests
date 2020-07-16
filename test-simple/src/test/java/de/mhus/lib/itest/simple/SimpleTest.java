@@ -62,6 +62,7 @@ public class SimpleTest extends TestCase {
 		
 		scenario.add(new Karaf("karaf", null, "debug"));
 		
+		scenario.destroyPrefix();
 		scenario.start();
 		
 		MThread.sleep(1000);
