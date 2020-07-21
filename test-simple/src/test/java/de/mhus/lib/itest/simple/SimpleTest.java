@@ -1,6 +1,7 @@
 package de.mhus.lib.itest.simple;
 
-import java.io.EOFException;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 
 import org.junit.jupiter.api.AfterAll;
@@ -24,28 +25,34 @@ public class SimpleTest extends TestCase {
 
     private static DockerScenario scenario;
 
-    
     @Test
     @Order(1)
-    public void testSample() throws NotFoundException, DockerException, InterruptedException, IOException {
-        
-        System.out.println("STEP 1 ===========================");
-        try {
-            scenario.waitForLogEntry("karaf", "@karaf()>", 0);
-        } catch (EOFException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("STEP 2 ===========================");
+    public void testLog() throws NotFoundException, DockerException, InterruptedException, IOException {
+        scenario.waitForLogEntry("karaf", "@karaf()>", 0);
+    }
+    
+    @Test
+    @Order(2)
+    public void testAttach() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = scenario.attach("karaf", "echo \"Hello World\"\n" )) {
             scenario.waitForLogEntry(stream, "Hello World");
         }
     }
     
     @Test
-    @Order(2)
+    @Order(3)
+    public void testExec() throws NotFoundException, DockerException, InterruptedException, IOException {
+        try (LogStream stream = scenario.exec("karaf", "ls /home/user/.m2" )) {
+            // scenario.waitForLogEntry(stream, "repository");
+            String res = stream.readAll();
+            assertTrue(res.contains("repository"));
+            assertTrue(res.contains("settings.xml")); // must be there since karaf is in debug and mounted local .m2 directory
+        }
+    }
+    
+    @Test
+    @Order(10)
     public void testInstallFeature() throws NotFoundException, DockerException, InterruptedException, IOException {
-        
         System.out.println("Install features");
         try (LogStream stream = scenario.attach("karaf", 
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/1.5.1/xml/features\n" + 
@@ -89,7 +96,7 @@ public class SimpleTest extends TestCase {
     
     @AfterAll
     public static void stopDocker() {
-        scenario.destroy();
+        // scenario.destroy();
     }
     
     
