@@ -129,44 +129,7 @@ public class DockerKarafTest extends TestCase {
             assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
         }
     }
-    
-    @Test
-    @Order(20)
-    public void testAccessStart() throws NotFoundException, DockerException, InterruptedException, IOException {
-        try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
-            scenario.attach(stream, 
-                    "access restart\n" +
-                    "access id\n" +
-                    "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
-            scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
-
-            String out = stream.getCaptured();
-
-            assertTrue(out.contains("null"));
-        }
-    }
-
-    @Test
-    @Order(21)
-    public void testAccessAdmin() throws NotFoundException, DockerException, InterruptedException, IOException {
-        try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
-            
-            scenario.attach(stream, 
-                    "access admin\n" +
-                    "access id\n" +
-                    "a=JKHHJKkjhkjhHJKHJ\n" );
-
-            scenario.waitForLogEntry(stream, "JKHHJKkjhkjhHJKHJ");
-
-            String out = stream.getCaptured();
-
-            assertTrue(out.contains("[?1000l[?2004ladmin"));
-        }
-    }
-    
     @BeforeAll
     public static void startDocker() {
         
