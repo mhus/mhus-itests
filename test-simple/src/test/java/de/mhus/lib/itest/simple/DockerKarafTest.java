@@ -56,8 +56,8 @@ public class DockerKarafTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCaputre(true);
             scenario.attach(stream, 
-                "feature:repo-add mvn:org.apache.shiro/shiro-features/1.5.1/xml/features\n" + 
-                "feature:repo-add mvn:de.mhus.osgi/mhus-features/7.1.0-SNAPSHOT/xml/features\n" +
+                "feature:repo-add mvn:org.apache.shiro/shiro-features/"+System.getenv("shiro.version")+"/xml/features\n" + 
+                "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+System.getenv("mhus-parent.version")+"/xml/features\n" +
                 "feature:install mhu-base\n" +
                 "list\n" +
                 "a=HGDFhjasdhj\n" );
@@ -153,7 +153,7 @@ public class DockerKarafTest extends TestCase {
 //              "e:MYSQL_ROOT_PASSWORD=nein"
 //              );
         // "link:db:dbserver"
-        scenario.add(new Karaf("karaf", null, "debug"));
+        scenario.add(new Karaf("karaf", System.getenv("docker.mhus-apache-karaf.version"), "debug"));
         
         scenario.destroyPrefix();
         scenario.start();
