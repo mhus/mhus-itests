@@ -1,7 +1,8 @@
-package de.mhus.lib.itest.simple;
+package de.mhus.lib.itest.cases;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.junit.jupiter.api.AfterAll;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import com.github.dockerjava.api.exception.DockerException;
 
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.tests.TestCase;
@@ -24,6 +26,7 @@ import de.mhus.lib.tests.docker.LogStream;
 public class DockerKarafTest extends TestCase {
 
     private static DockerScenario scenario;
+    private static MProperties prop;
 
     @Test
     @Order(1)
@@ -56,8 +59,8 @@ public class DockerKarafTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCaputre(true);
             scenario.attach(stream, 
-                "feature:repo-add mvn:org.apache.shiro/shiro-features/"+System.getenv("shiro.version")+"/xml/features\n" + 
-                "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+System.getenv("mhus-parent.version")+"/xml/features\n" +
+                "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
+                "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
                 "feature:install mhu-base\n" +
                 "list\n" +
                 "a=HGDFhjasdhj\n" );
@@ -131,8 +134,19 @@ public class DockerKarafTest extends TestCase {
     }
 
     @BeforeAll
-    public static void startDocker() {
+    public static void startDocker() throws NotFoundException {
         
+        prop = new MProperties(System.getenv());
+        
+        if (!prop.containsKey("project.version")) {
+            System.out.println("Load env from file");
+            File f = new File("../target/classes/app.properties");
+            if (!f.exists())
+                throw new NotFoundException("app.properties not found: " + f);
+            prop.putAll(MProperties.load(f));
+        }
+        System.out.println(prop);
+
 //      System.out.println("ENV:");
 //        System.out.println(System.getenv());
 //        System.out.println("PROPS:");
@@ -153,7 +167,7 @@ public class DockerKarafTest extends TestCase {
 //              "e:MYSQL_ROOT_PASSWORD=nein"
 //              );
         // "link:db:dbserver"
-        scenario.add(new Karaf("karaf", System.getenv("docker.mhus-apache-karaf.version"), "debug"));
+        scenario.add(new Karaf("karaf", prop.getString("docker.mhus-apache-karaf.version"), "debug"));
         
         scenario.destroyPrefix();
         scenario.start();

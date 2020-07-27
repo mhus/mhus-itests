@@ -113,7 +113,9 @@
 	</build>
 
 	<modules>
-	   <module>test-simple</module>
+	
+	   <module>examples-rest</module>
+	   <module>test-cases</module>
 	</modules>
 
     <dependencies>
