@@ -1,11 +1,18 @@
 package de.mhus.examples.rest;
 
+import de.mhus.lib.annotations.generic.Public;
+
 public class Book {
 
+    @Public(writable = false)
     private String isbn;
+    @Public
     private String title;
+    @Public
     private String author;
+    @Public
     private String description;
+    @Public
     private int createdYear;
     
     public String getIsbn() {

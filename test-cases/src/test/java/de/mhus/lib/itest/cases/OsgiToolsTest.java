@@ -33,9 +33,8 @@ public class OsgiToolsTest extends TestCase {
     @Order(10)
     public void testAccessStart() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             scenario.attach(stream, 
-                    "access restart\n" +
                     "access id\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
@@ -45,13 +44,9 @@ public class OsgiToolsTest extends TestCase {
 
             assertTrue(out.contains("null"));
         }
-    }
 
-    @Test
-    @Order(11)
-    public void testAccessAdmin() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "access admin\n" +
@@ -70,7 +65,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(20)
     public void testTimerList() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "timer list\n" +
@@ -88,7 +83,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(30)
     public void testCacheList() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "cache list\n" +
@@ -107,7 +102,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(30)
     public void testSimpleServices() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "simpleservice list\n" +
@@ -126,7 +121,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(40)
     public void testBundleList() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "ll -l -m\n" +
@@ -147,7 +142,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(41)
     public void testBundleWatch() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "bundle:watch\n" +
@@ -165,7 +160,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(42)
     public void testHealtCheck() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "healthcheck\n" +
@@ -184,7 +179,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(43)
     public void testJcaInfo() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "jcainfo\n" +
@@ -202,7 +197,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(44)
     public void testMem() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "mem\n" +
@@ -221,7 +216,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(45)
     public void testUptime() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "uptime\n" +
@@ -239,7 +234,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(60)
     public void testMhusConfigDump() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "mhus:config dump\n" +
@@ -257,7 +252,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(61)
     public void testConsoleInfo() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "console info  \n" +
@@ -275,7 +270,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(62)
     public void testIdent() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "ident\n" +
@@ -295,7 +290,7 @@ public class OsgiToolsTest extends TestCase {
         String id = null;
         String secret = "Secret" + Math.random();
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "keychain list\n" +
@@ -308,7 +303,7 @@ public class OsgiToolsTest extends TestCase {
             assertFalse(out.contains("Test"));
         }
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "keychain add test Test TDesc "+secret+"\n" +
@@ -323,7 +318,7 @@ public class OsgiToolsTest extends TestCase {
             System.out.println(">>> ID: " + id);
         }
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "keychain list\n" +
@@ -336,7 +331,7 @@ public class OsgiToolsTest extends TestCase {
             assertTrue(out.contains("Test"));
         }
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "keychain get "+id+"\n" +
@@ -351,7 +346,7 @@ public class OsgiToolsTest extends TestCase {
             assertTrue(out.contains(secret));
         }
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "keychain save\n" +
@@ -363,7 +358,7 @@ public class OsgiToolsTest extends TestCase {
             assertTrue(out.contains("OK"));
         }
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "keychain remove "+id+"\n" +
@@ -375,7 +370,7 @@ public class OsgiToolsTest extends TestCase {
             assertTrue(out.contains("OK"));
         }
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "keychain list\n" +
@@ -388,7 +383,7 @@ public class OsgiToolsTest extends TestCase {
             assertFalse(out.contains("Test"));
         }
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "keychain load\n" +
@@ -400,7 +395,7 @@ public class OsgiToolsTest extends TestCase {
             assertTrue(out.contains("OK"));
         }
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "keychain list\n" +
@@ -418,7 +413,7 @@ public class OsgiToolsTest extends TestCase {
     @Order(64)
     public void testLockList() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "bundle:watch\n" +
@@ -463,7 +458,7 @@ public class OsgiToolsTest extends TestCase {
         }
         
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             scenario.attach(stream, 
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
                 "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
@@ -496,7 +491,7 @@ public class OsgiToolsTest extends TestCase {
         }
         
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "dev-res -y cp default\n" +
@@ -510,7 +505,16 @@ public class OsgiToolsTest extends TestCase {
             assertTrue(out.contains("[doConfigure]"));
             assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
         }
-        
+
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            scenario.attach(stream, 
+                    "access restart\n" +
+                    "a=HJGPODGHHKJNBHJGJHHJVU\n" );
+
+            scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVU");
+
+        }
+
     }
     
     @AfterAll

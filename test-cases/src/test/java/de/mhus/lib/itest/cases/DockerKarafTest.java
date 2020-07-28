@@ -1,5 +1,6 @@
 package de.mhus.lib.itest.cases;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
@@ -18,6 +19,7 @@ import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.tests.TestCase;
+import de.mhus.lib.tests.docker.AnsiLogFilter;
 import de.mhus.lib.tests.docker.DockerScenario;
 import de.mhus.lib.tests.docker.Karaf;
 import de.mhus.lib.tests.docker.LogStream;
@@ -27,12 +29,6 @@ public class DockerKarafTest extends TestCase {
 
     private static DockerScenario scenario;
     private static MProperties prop;
-
-    @Test
-    @Order(1)
-    public void testLog() throws NotFoundException, DockerException, InterruptedException, IOException {
-        scenario.waitForLogEntry("karaf", "@karaf()>", 0);
-    }
     
     @Test
     @Order(2)
@@ -57,7 +53,7 @@ public class DockerKarafTest extends TestCase {
     @Order(10)
     public void testInstallMhusFeature() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             scenario.attach(stream, 
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
                 "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
@@ -93,7 +89,7 @@ public class DockerKarafTest extends TestCase {
     @Order(11)
     public void testInstallDevFeature() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             scenario.attach(stream, 
                 "feature:install mhu-dev\n" +
                 "list\n" +
@@ -117,7 +113,7 @@ public class DockerKarafTest extends TestCase {
     @Order(12)
     public void testInstallDevFiles() throws NotFoundException, DockerException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCaputre(true);
+            stream.setCapture(true);
             
             scenario.attach(stream, 
                     "dev-res -y cp default\n" +
@@ -133,8 +129,27 @@ public class DockerKarafTest extends TestCase {
         }
     }
 
+    @Test
+    @Order(13)
+    public void testAnsiFilter() throws NotFoundException, DockerException, InterruptedException, IOException {
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            stream.setFilter(new AnsiLogFilter());
+            scenario.attach(stream, 
+                    "list\n" +
+                    "a=kjshkjfhjkIUYJGHJU\n" );
+
+            scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJU");
+
+            String out = stream.getCaptured();
+
+            assertFalse(out.contains("[0m"));
+            assertTrue(out.contains("karaf@karaf()>"));
+        }
+    }
+    
     @BeforeAll
-    public static void startDocker() throws NotFoundException {
+    public static void startDocker() throws NotFoundException, IOException, InterruptedException {
         
         prop = new MProperties(System.getenv());
         
@@ -174,6 +189,7 @@ public class DockerKarafTest extends TestCase {
         
         MThread.sleep(1000);
         
+        scenario.waitForLogEntry("karaf", "@karaf()>", 0);
     }
     
     @AfterAll
