@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.junit.jupiter.api.AfterAll;
@@ -247,16 +246,7 @@ public class OsgiRestTest extends TestCase {
     @BeforeAll
     public static void startDocker() throws NotFoundException, IOException, InterruptedException {
         
-        prop = new MProperties(System.getenv());
-        
-        if (!prop.containsKey("project.version")) {
-            System.out.println("Load env from file");
-            File f = new File("../target/classes/app.properties");
-            if (!f.exists())
-                throw new NotFoundException("app.properties not found: " + f);
-            prop.putAll(MProperties.load(f));
-        }
-        System.out.println(prop);
+        prop = TestUtil.loadProperties();
 
         // http://kong.github.io/unirest-java/
         Unirest.config().interceptor(new Interceptor() {
@@ -288,7 +278,7 @@ public class OsgiRestTest extends TestCase {
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
                 "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
                 "feature:install mhu-base mhu-dev mhu-rest-servlet\n" +
-                "bundle:install -s mvn:de.mhus.lib.itest/examples-rest/7.0.0-SNAPSHOT\n" + // +prop.getString("project.version")+
+                "bundle:install -s mvn:de.mhus.lib.itest/examples-rest/"+prop.getString("project.version")+"\n" +
                 "list\n" +
                 "a=HGDFhjasdhj\n" );
         
@@ -305,10 +295,10 @@ public class OsgiRestTest extends TestCase {
             assertTrue(out.contains("lib-annotations"));
             assertTrue(out.contains("lib-core"));
             assertTrue(out.contains("lib-j2ee"));
-            assertTrue(out.contains("db-core"));
-            assertTrue(out.contains("db-karaf"));
-            assertTrue(out.contains("db-osgi-api"));
-            assertTrue(out.contains("db-osgi-adb"));
+//            assertTrue(out.contains("db-core"));
+//            assertTrue(out.contains("db-karaf"));
+//            assertTrue(out.contains("db-osgi-api"));
+//            assertTrue(out.contains("db-osgi-adb"));
             assertTrue(out.contains("karaf-commands"));
             assertTrue(out.contains("osgi-api"));
             assertTrue(out.contains("osgi-services"));

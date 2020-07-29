@@ -113,8 +113,8 @@
 	</build>
 
 	<modules>
-	
-	   <module>examples-rest</module>
+       <module>examples-rest</module>
+	   <module>examples-adb</module>
 	   <module>test-cases</module>
 	</modules>
 

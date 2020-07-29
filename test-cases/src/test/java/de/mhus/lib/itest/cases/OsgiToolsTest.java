@@ -3,7 +3,6 @@ package de.mhus.lib.itest.cases;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.junit.jupiter.api.AfterAll;
@@ -429,16 +428,7 @@ public class OsgiToolsTest extends TestCase {
     @BeforeAll
     public static void startDocker() throws NotFoundException, IOException, InterruptedException {
         
-        prop = new MProperties(System.getenv());
-        
-        if (!prop.containsKey("project.version")) {
-            System.out.println("Load env from file");
-            File f = new File("../target/classes/app.properties");
-            if (!f.exists())
-                throw new NotFoundException("app.properties not found: " + f);
-            prop.putAll(MProperties.load(f));
-        }
-        System.out.println(prop);
+        prop = TestUtil.loadProperties();
         
         scenario = new DockerScenario();
         scenario.add(new Karaf("karaf", prop.getString("docker.mhus-apache-karaf.version"), "debug"));
