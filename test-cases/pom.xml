@@ -27,11 +27,11 @@
   </parent>
   
   <dependencies>
-        <dependency>
-            <groupId>com.mashape.unirest</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>1.4.9</version>
-        </dependency>
+	<dependency>
+	    <groupId>com.konghq</groupId>
+	    <artifactId>unirest-java</artifactId>
+	    <version>3.7.04</version>
+    </dependency>
   </dependencies>
   
 </project>

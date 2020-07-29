@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.mhus.rest.core.CallContext;
 import de.mhus.rest.core.annotation.RestNode;
-import de.mhus.rest.core.api.Node;
 import de.mhus.rest.core.api.RestNodeService;
 import de.mhus.rest.core.node.JsonRestNode;
 import de.mhus.rest.core.result.JsonResult;
+import de.mhus.rest.osgi.PublicRestNode;
 
-@RestNode(name = "info", parent = Node.PUBLIC_PARENT)
+@RestNode(name = "info", parentNode = PublicRestNode.class)
 @Component(immediate = true, service = RestNodeService.class)
 public class PublicInfo extends JsonRestNode {
 

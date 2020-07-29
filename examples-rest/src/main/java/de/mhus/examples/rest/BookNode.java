@@ -50,7 +50,7 @@ public class BookNode extends ObjectListNode<Book,Book> {
 
         Book book = new Book();
         PojoModelFactory schema = getPojoModelFactory();
-        MPojo.propertiesToPojo(context.getParameters(), book, schema);
+        MPojo.propertiesToPojo(context.getParameters(), book, schema, null, true);
 
         books.put(book.getIsbn(), book);
 
