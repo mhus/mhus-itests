@@ -16,7 +16,7 @@ import de.mhus.lib.tests.docker.Karaf;
 import de.mhus.lib.tests.docker.LogStream;
 
 @TestMethodOrder(OrderAnnotation.class)
-public class OsgiAdbMysqlTest extends OsgiAdbAbstract {
+public class OsgiAdbPsqlTest extends OsgiAdbAbstract {
 
     @BeforeAll
     public static void startDocker() throws NotFoundException, IOException, InterruptedException {
@@ -25,8 +25,8 @@ public class OsgiAdbMysqlTest extends OsgiAdbAbstract {
         
         scenario = new DockerScenario();
         
-        scenario.add("db", "mariadb:10.3", 
-              "e:MYSQL_ROOT_PASSWORD=nein"
+        scenario.add("db", "postgres:12.3", 
+              "e:POSTGRES_PASSWORD=nein"
         );
 
         scenario.add(new Karaf("karaf", 
@@ -41,24 +41,22 @@ public class OsgiAdbMysqlTest extends OsgiAdbAbstract {
         
         MThread.sleep(1000);
 
-        scenario.waitForLogEntry("db", "mysqld: ready for connections", 0);
-        
-        MThread.sleep(10000); // need to wait until background job of mariadb set the admin password
+        scenario.waitForLogEntry("db", "database system is ready to accept connections", 0);
         
         String sql = 
                 "CREATE DATABASE db_test;\n" + 
-                "CREATE USER 'usr_test'@'%' IDENTIFIED BY 'nein';\n" + 
-                "GRANT ALL PRIVILEGES ON db_test.* TO 'usr_test'@'%';\n" +
+                "CREATE USER usr_test WITH ENCRYPTED PASSWORD 'nein';\n" +
+                "GRANT ALL PRIVILEGES ON DATABASE db_test TO usr_test;\n" + 
                 "quit";
         
-        try (LogStream stream = scenario.exec("db","mysql -pnein", sql )) {
+        try (LogStream stream = scenario.exec("db","psql -U postgres", sql )) {
             stream.setCapture(true);
             scenario.waitForLogEntry(stream, "quit");
             String res = stream.getCaptured();
             assertFalse(res.contains("ERROR"));
         }
         
-        prepareKaraf("maria", "");
+        prepareKaraf("psql", "");
         
     }
     

@@ -43,7 +43,7 @@ public class CmdAdbBenchmark extends AbstractCmd {
         // Cleanup
         {
             for (Member entry : adb.getAll(Member.class)) {
-                System.out.print(".");
+//                System.out.print(".");
                 entry.delete();
             }
         }
@@ -52,7 +52,7 @@ public class CmdAdbBenchmark extends AbstractCmd {
         {
             MStopWatch watch = new MStopWatch("ADB SaveLoad").start();
             for (int i = 0; i < amount; i++) {
-                System.out.print(".");
+//                System.out.print(".");
                 Member entry = adb.inject(new Member());
                 entry.setName("Trooper " + i);
                 entry.save();
@@ -70,7 +70,7 @@ public class CmdAdbBenchmark extends AbstractCmd {
         {
             MStopWatch watch = new MStopWatch("ADB Read").start();
             for (int i = 0; i < readLoops; i++) {
-                System.out.print(".");
+//                System.out.print(".");
                 for (Member entry : adb.getAll(Member.class))
                     entry.getName();
             }
@@ -84,7 +84,7 @@ public class CmdAdbBenchmark extends AbstractCmd {
             int cnt = 0;
             MStopWatch watch = new MStopWatch("ADB Delete").start();
             for (Member entry : adb.getAll(Member.class)) {
-                System.out.print(".");
+//                System.out.print(".");
                 entry.delete();
                 cnt++;
             }

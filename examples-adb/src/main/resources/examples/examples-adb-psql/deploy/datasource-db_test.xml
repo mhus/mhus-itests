@@ -17,14 +17,26 @@
     -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <bean id="dataSource" class="de.mhus.db.karaf.datasource.DelegateDataSource">
-        <property name="source" value="jdbc/db_test"/>
-    </bean>
 
+  <bean id="dataSource" class="org.postgresql.ds.PGPoolingDataSource" destroy-method="close">
+        <property name="serverName" value="dbserver:5432" />
+        <property name="databaseName" value="db_test" />
+        <property name="user" value="usr_test" />
+        <property name="password" value="nein" />
+        <property name="dataSourceName" value="db_test" />
+  </bean>
+
+<!-- 
+    <bean id="dataSource" class="org.postgresql.ds.PGSimpleDataSource">
+        <property name="url" value="jdbc:postgresql://cryptamariadb:5432/db_crypta"/>
+        <property name="user" value="usr_crypta"/>
+        <property name="password" value="nein"/>
+    </bean>
+ -->
     <service interface="javax.sql.DataSource" ref="dataSource">
         <service-properties>
-            <entry key="osgi.jndi.service.name" value="adb_common"/>
-            <entry key="dataSourceName" value="adb_common"/>
+            <entry key="osgi.jndi.service.name" value="jdbc/db_test"/>
+            <entry key="dataSourceName" value="jdbc/db_test"/>
         </service-properties>
     </service>
 </blueprint>

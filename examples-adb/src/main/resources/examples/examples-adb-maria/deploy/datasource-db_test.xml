@@ -9,8 +9,8 @@
 
     <service interface="javax.sql.DataSource" ref="dataSource">
         <service-properties>
-            <entry key="osgi.jndi.service.name" value="jdbc/mysql"/>
-            <entry key="dataSourceName" value="jdbc/mysql"/>
+            <entry key="osgi.jndi.service.name" value="jdbc/db_test"/>
+            <entry key="dataSourceName" value="jdbc/db_test"/>
         </service-properties>
     </service>
 </blueprint>

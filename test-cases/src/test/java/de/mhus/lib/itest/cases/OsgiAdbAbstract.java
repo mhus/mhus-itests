@@ -14,7 +14,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.Timeout;
 
 import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MValidator;
 import de.mhus.lib.errors.NotFoundException;
@@ -28,6 +27,7 @@ public class OsgiAdbAbstract extends TestCase {
 
     protected static DockerScenario scenario;
     protected static MProperties prop;
+    @SuppressWarnings("unused")
     private static String kind;
 
     @Test
@@ -44,7 +44,7 @@ public class OsgiAdbAbstract extends TestCase {
             scenario.waitForLogEntry(stream, "quiweyBNVNB");
 
             String out = stream.getCaptured();
-            assertTrue(out.contains("jdbc/mysql"));
+            assertTrue(out.contains("jdbc/"));
             assertTrue(out.contains("adb_common"));
         }
     }
@@ -63,8 +63,8 @@ public class OsgiAdbAbstract extends TestCase {
             scenario.waitForLogEntry(stream, "quiweyBNVNB");
 
             String out = stream.getCaptured();
-            assertTrue(out.contains("Global : xdb:adb/adb"));
-            assertTrue(out.contains("Session: xdb:adb/adb"));
+            assertTrue(out.contains("Global : xdb:adb/common_adb/adb_common"));
+            assertTrue(out.contains("Session: xdb:adb/common_adb/adb_common"));
         }
     }
 
