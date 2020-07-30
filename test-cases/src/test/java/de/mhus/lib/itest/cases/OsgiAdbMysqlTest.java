@@ -58,7 +58,7 @@ public class OsgiAdbMysqlTest extends OsgiAdbAbstract {
             assertFalse(res.contains("ERROR"));
         }
         
-        prepareKaraf();
+        prepareKaraf("maria", "");
         
     }
     

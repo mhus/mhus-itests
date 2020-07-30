@@ -1,16 +1,20 @@
 package de.mhus.lib.itest.cases;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Timeout;
 
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MValidator;
 import de.mhus.lib.errors.NotFoundException;
@@ -24,9 +28,11 @@ public class OsgiAdbAbstract extends TestCase {
 
     protected static DockerScenario scenario;
     protected static MProperties prop;
+    private static String kind;
 
     @Test
     @Order(1)
+    @Timeout(value=1,unit=TimeUnit.MINUTES)
     public void testDatasource() throws NotFoundException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
@@ -45,6 +51,7 @@ public class OsgiAdbAbstract extends TestCase {
 
     @Test
     @Order(2)
+    @Timeout(value=1,unit=TimeUnit.MINUTES)
     public void testUse() throws NotFoundException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
@@ -63,6 +70,7 @@ public class OsgiAdbAbstract extends TestCase {
 
     @Test
     @Order(3)
+    @Timeout(value=1,unit=TimeUnit.MINUTES)
     public void testList() throws NotFoundException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
@@ -83,8 +91,91 @@ public class OsgiAdbAbstract extends TestCase {
     }
 
     @Test
-    @Order(4)
+    @Order(10)
+    @Timeout(value=3,unit=TimeUnit.MINUTES)
+    public void testDelete() throws NotFoundException, InterruptedException, IOException {
+        // create
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            scenario.attach(stream, 
+                            "xdb:create Member 'name=Shmi Skywalker-Lars'\n" +
+                            "xdb:create Member 'name=Anakin Skywalker'\n" +
+                            "xdb:create Member 'name=Padmé Amidala'\n" +
+                            "xdb:create Member 'name=Luke Skywalker'\n" +
+                            "xdb:create Member 'name=Leia Organa'\n" +
+                            "xdb:create Member 'name=Ben Solo'\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("--- SET name"));
+            assertTrue(out.contains("*** CREATE"));
+        }
+        // count
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            stream.setFilter(new AnsiLogFilter());
+            scenario.attach(stream, 
+                    "xdb:count Member\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            System.out.println();
+            System.out.println("------");
+            System.out.println(out);
+            System.out.println("------");
+            
+            String count = out.split("\n")[1].trim();
+            System.out.println(count);
+            assertEquals("6", count);
+        }
+        // delete
+        cleanupEntities();
+        // count
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            stream.setFilter(new AnsiLogFilter());
+            scenario.attach(stream, 
+                    "xdb:count Member\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            System.out.println();
+            System.out.println("------");
+            System.out.println(out);
+            System.out.println("------");
+            
+            String count = out.split("\n")[1].trim();
+            System.out.println(count);
+            assertEquals("0", count);
+        }
+    }
+    
+    protected void cleanupEntities() throws NotFoundException, IOException, InterruptedException {
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            stream.setFilter(new AnsiLogFilter());
+            scenario.attach(stream, 
+                            "xdb:delete -y Member '()'\n" +
+                            "xdb:delete -y Author '()'\n" +
+                            "xdb:delete -y Book '()'\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+        }
+    }
+
+    @Test
+    @Order(11)
+    @Timeout(value=5,unit=TimeUnit.MINUTES)
     public void testCrud() throws NotFoundException, InterruptedException, IOException {
+        
+        cleanupEntities();
         
         String id = null;
         
@@ -179,8 +270,23 @@ public class OsgiAdbAbstract extends TestCase {
         }
     }
 
+    @Test
+    @Order(20)
+    public void testBenchmark() throws NotFoundException, IOException, InterruptedException {
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            stream.setFilter(new AnsiLogFilter());
+            scenario.attach(stream, 
+                            "itest:adbbenchmark 10000 1000\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+        }
+    }
     
-    public static void prepareKaraf() throws NotFoundException, InterruptedException, IOException {
+    
+    public static void prepareKaraf(String kind, String additionallInstall) throws NotFoundException, InterruptedException, IOException {
+        OsgiAdbAbstract.kind = kind;
         
         scenario.waitForLogEntry("karaf", "@karaf()>", 0);
         
@@ -191,6 +297,7 @@ public class OsgiAdbAbstract extends TestCase {
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
                 "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
                 "feature:install mhu-jdbc mhu-dev\n" +
+                additionallInstall +
                 "bundle:install -s mvn:de.mhus.lib.itest/examples-adb/"+prop.getString("project.version")+"\n" +
                 "list\n" +
                 "a=HGDFhjasdhj\n" );
@@ -226,7 +333,7 @@ public class OsgiAdbAbstract extends TestCase {
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
                     "dev-res -y cp default\n" +
-                    "dev-res -y cp examples-adb\n" +
+                    "dev-res -y cp examples-adb-"+kind+"\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");

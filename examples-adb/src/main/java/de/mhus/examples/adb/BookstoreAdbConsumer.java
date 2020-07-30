@@ -9,7 +9,7 @@ import de.mhus.db.osgi.api.adb.CommonDbConsumer;
 import de.mhus.db.osgi.api.adb.ReferenceCollector;
 import de.mhus.lib.xdb.XdbService;
 
-@Component(service = CommonDbConsumer.class,property = "commonService=adb",immediate = true)
+@Component(service = CommonDbConsumer.class,property = "commonService=common_adb",immediate = true)
 public class BookstoreAdbConsumer extends AbstractCommonAdbConsumer {
 
     @Override
