@@ -11,11 +11,11 @@ import de.mhus.osgi.api.jms.JmsDataConnection;
 
 @Component(immediate = true, service = JmsDataChannel.class)
 @JmsDataConnection("test")
-public class TestJmsServer extends AbstractJmsDataChannel {
+public class TestJsonServer extends AbstractJmsDataChannel {
 
     @Override
     protected JmsChannel createChannel() throws JMSException {
-        return new TestJmsChannel();
+        return new TestJsonChannel();
     }
 
 }

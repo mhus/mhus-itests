@@ -28,9 +28,129 @@ public class KarafJmsTest extends TestCase {
 
     @Test
     @Order(1)
-    public void testJmsConnection() {
-        
+    public void testJmsConnection() throws NotFoundException, IOException, InterruptedException {
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "jms:connection-list -ta\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("tcp://jmsserver:61616"));
+            // could be closed until first usage - assertTrue(out.split("\n")[2].split("\\|")[4].trim().equals("true"));
+        }
     }
+    
+    @Test
+    @Order(2)
+    public void testJmsChannel() throws NotFoundException, IOException, InterruptedException {
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "jms:channel-list -ta\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("TestJmsServer"));
+            assertTrue(out.contains("/queue/test"));
+        }
+    }
+    
+    @Test
+    @Order(3)
+    public void testSendDirect() throws NotFoundException, IOException, InterruptedException {
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "jms:direct-send test test Hello\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "GET ONE WAY: ActiveMQTextMessage");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("Hello"));
+        }
+    }
+
+    @Test
+    @Order(4)
+    public void testSendClient() throws NotFoundException, IOException, InterruptedException {
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "itest:jms client test test Ribonucleicacid\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "From");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("text = Ribonucleicacid"));
+            assertTrue(out.contains("Text                 Ribonucleicacid"));
+        }
+    }
+    
+    @Test
+    @Order(5)
+    public void testSendJson() throws NotFoundException, IOException, InterruptedException {
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "itest:jms json test test.json Ribonucleicacid\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "Properties");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("GET: {\"value\":\"Ribonucleicacid\"}"));
+            assertTrue(out.contains("RES: {\"value\":\"Ribonucleicacid\"}"));
+        }
+    }
+    
+    @Test
+    @Order(6)
+    public void testSendJsonObject() throws NotFoundException, IOException, InterruptedException {
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "itest:jms book test test.obj Ribonucleicacid\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "Properties");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("GET0: [Book:[Ribonucleicacid]]"));
+            assertTrue(out.contains("RES: [Book:[Ribonucleicacid]]"));
+        }
+    }
+
+    // Service calls are currently not working
+//    @Test
+//    @Order(7)
+//    public void testSendService() throws NotFoundException, IOException, InterruptedException {
+//        try (LogStream stream = new LogStream(scenario, "karaf")) {
+//            stream.setCapture(true);
+//            
+//            scenario.attach(stream, 
+//                    "itest:jms service.checkout test test.service 1234 Ribonucleicacid\n" +
+//                    "a=quiweyBNVNB\n" );
+//
+//            scenario.waitForLogEntry(stream, "Properties");
+//
+//            String out = stream.getCaptured();
+//            assertTrue(out.contains("GET0: [Book:[Ribonucleicacid]]"));
+//            assertTrue(out.contains("RES: [Book:[Ribonucleicacid]]"));
+//        }
+//    }
     
     @BeforeAll
     public static void startDocker() throws NotFoundException, IOException, InterruptedException {
