@@ -23,7 +23,7 @@ import de.mhus.lib.tests.docker.DockerScenario;
 import de.mhus.lib.tests.docker.LogStream;
 
 @TestMethodOrder(OrderAnnotation.class)
-public class OsgiAdbAbstract extends TestCase {
+public class KarafAdbAbstract extends TestCase {
 
     protected static DockerScenario scenario;
     protected static MProperties prop;
@@ -286,7 +286,7 @@ public class OsgiAdbAbstract extends TestCase {
     
     
     public static void prepareKaraf(String kind, String additionallInstall) throws NotFoundException, InterruptedException, IOException {
-        OsgiAdbAbstract.kind = kind;
+        KarafAdbAbstract.kind = kind;
         
         scenario.waitForLogEntry("karaf", "@karaf()>", 0);
         

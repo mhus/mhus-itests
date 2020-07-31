@@ -23,7 +23,7 @@ import de.mhus.lib.tests.docker.Karaf;
 import de.mhus.lib.tests.docker.LogStream;
 
 @TestMethodOrder(OrderAnnotation.class)
-public class OsgiToolsTest extends TestCase {
+public class KarafToolsTest extends TestCase {
 
     private static DockerScenario scenario;
     private static MProperties prop;

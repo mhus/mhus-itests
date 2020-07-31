@@ -33,7 +33,7 @@ import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 
 @TestMethodOrder(OrderAnnotation.class)
-public class OsgiRestTest extends TestCase {
+public class KarafRestTest extends TestCase {
 
     private static DockerScenario scenario;
     private static MProperties prop;
@@ -295,10 +295,6 @@ public class OsgiRestTest extends TestCase {
             assertTrue(out.contains("lib-annotations"));
             assertTrue(out.contains("lib-core"));
             assertTrue(out.contains("lib-j2ee"));
-//            assertTrue(out.contains("db-core"));
-//            assertTrue(out.contains("db-karaf"));
-//            assertTrue(out.contains("db-osgi-api"));
-//            assertTrue(out.contains("db-osgi-adb"));
             assertTrue(out.contains("karaf-commands"));
             assertTrue(out.contains("osgi-api"));
             assertTrue(out.contains("osgi-services"));

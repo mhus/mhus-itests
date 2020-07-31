@@ -52,6 +52,15 @@
 			<url>http://www.mhus.org</url>
 		</developer>
 	</developers>
+	
+    <modules>
+       <module>examples-rest</module>
+       <module>examples-adb</module>
+       <module>examples-jms</module>
+       <module>test-cases</module>
+    </modules>
+
+	
 	<build>
 		<plugins>
 		      <plugin>
@@ -111,12 +120,6 @@
 		</plugins>
 
 	</build>
-
-	<modules>
-       <module>examples-rest</module>
-	   <module>examples-adb</module>
-	   <module>test-cases</module>
-	</modules>
 
     <dependencies>
         <dependency>

@@ -16,7 +16,7 @@ import de.mhus.lib.tests.docker.Karaf;
 import de.mhus.lib.tests.docker.LogStream;
 
 @TestMethodOrder(OrderAnnotation.class)
-public class OsgiAdbPsqlTest extends OsgiAdbAbstract {
+public class KarafAdbPsqlTest extends KarafAdbAbstract {
 
     @BeforeAll
     public static void startDocker() throws NotFoundException, IOException, InterruptedException {
@@ -32,7 +32,6 @@ public class OsgiAdbPsqlTest extends OsgiAdbAbstract {
         scenario.add(new Karaf("karaf", 
                 prop.getString("docker.mhus-apache-karaf.version"), 
                 "debug", 
-                "p:32796+:8181",
                 "link:db:dbserver"
                 ));
         
