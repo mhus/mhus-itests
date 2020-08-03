@@ -1,6 +1,5 @@
 package de.mhus.lib.itest.cases;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -40,6 +39,15 @@ public class KarafTransformTest extends TestCase {
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
 
             String out = stream.getCaptured();
+            
+            String[] parts = out.split("======================");
+            assertTrue(parts.length > 1);
+            
+            for (int i = 1; i < parts.length; i = i + 2) {
+                String name = parts[i].trim();
+                System.out.println(">>> " + name);
+                assertTrue(parts[i+1].contains(">>> Transform successful"));
+            }
 
 //            assertTrue(out.contains("null"));
         }
@@ -59,6 +67,14 @@ public class KarafTransformTest extends TestCase {
         
         MThread.sleep(1000);
 
+        try (LogStream stream = scenario.exec("karaf", 
+                new String[] {"bash","-c","apt-get update && apt-get install -y xpdf && apt-get install -y libreoffice"}, 
+                null, false, "root", null, null
+                )) {
+            @SuppressWarnings("unused")
+            String res = stream.readAll();
+        }
+        
         scenario.waitForLogEntry("karaf", "@karaf()>", 0);
         
         try (LogStream stream = scenario.exec("karaf", "ls /home/user/.m2" )) {
@@ -121,7 +137,7 @@ public class KarafTransformTest extends TestCase {
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
             MThread.sleep(5000); // a long time - wait for configuration manager
 
-            String out = stream.getCaptured();
+//            String out = stream.getCaptured();
 
 //            assertTrue(out.contains("[doConfigure]"));
 //            assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
