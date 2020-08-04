@@ -5,13 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.Timeout;
 
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MThread;
@@ -22,8 +19,8 @@ import de.mhus.lib.tests.docker.AnsiLogFilter;
 import de.mhus.lib.tests.docker.DockerScenario;
 import de.mhus.lib.tests.docker.LogStream;
 
-@TestMethodOrder(OrderAnnotation.class)
-public class KarafAdbAbstract extends TestCase {
+@Disabled
+public abstract class KarafAdbAbstract extends TestCase {
 
     protected static DockerScenario scenario;
     protected static MProperties prop;
@@ -32,7 +29,7 @@ public class KarafAdbAbstract extends TestCase {
 
     @Test
     @Order(1)
-    @Timeout(value=1,unit=TimeUnit.MINUTES)
+    //@Timeout(value=1,unit=TimeUnit.MINUTES)
     public void testDatasource() throws NotFoundException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
@@ -51,7 +48,7 @@ public class KarafAdbAbstract extends TestCase {
 
     @Test
     @Order(2)
-    @Timeout(value=1,unit=TimeUnit.MINUTES)
+    //@Timeout(value=1,unit=TimeUnit.MINUTES)
     public void testUse() throws NotFoundException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
@@ -70,7 +67,7 @@ public class KarafAdbAbstract extends TestCase {
 
     @Test
     @Order(3)
-    @Timeout(value=1,unit=TimeUnit.MINUTES)
+    //@Timeout(value=1,unit=TimeUnit.MINUTES)
     public void testList() throws NotFoundException, InterruptedException, IOException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
@@ -92,7 +89,7 @@ public class KarafAdbAbstract extends TestCase {
 
     @Test
     @Order(10)
-    @Timeout(value=3,unit=TimeUnit.MINUTES)
+    //@Timeout(value=3,unit=TimeUnit.MINUTES)
     public void testDelete() throws NotFoundException, InterruptedException, IOException {
         // create
         try (LogStream stream = new LogStream(scenario, "karaf")) {
@@ -172,7 +169,7 @@ public class KarafAdbAbstract extends TestCase {
 
     @Test
     @Order(11)
-    @Timeout(value=5,unit=TimeUnit.MINUTES)
+    //@Timeout(value=5,unit=TimeUnit.MINUTES)
     public void testCrud() throws NotFoundException, InterruptedException, IOException {
         
         cleanupEntities();
