@@ -57,6 +57,7 @@
        <module>examples-rest</module>
        <module>examples-adb</module>
        <module>examples-jms</module>
+       <module>examples-vaadin</module>
        <module>test-cases</module>
     </modules>
 
@@ -117,6 +118,12 @@
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 			</plugin>
+			
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-site-plugin</artifactId>
+			    <version>3.9.1</version>
+ 		     </plugin>
 		</plugins>
 
 	</build>

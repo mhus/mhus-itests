@@ -3,6 +3,7 @@ package de.mhus.lib.itest.cases;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.net.URL;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,6 +11,9 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.github.dockerjava.api.exception.DockerException;
 
@@ -17,6 +21,7 @@ import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.tests.TestCase;
+import de.mhus.lib.tests.docker.DockerContainer;
 import de.mhus.lib.tests.docker.DockerScenario;
 import de.mhus.lib.tests.docker.Karaf;
 import de.mhus.lib.tests.docker.LogStream;
@@ -26,11 +31,14 @@ public class KarafVaadinTest extends TestCase {
 
     private static DockerScenario scenario;
     private static MProperties prop;
+    private static WebDriver driver;
+    private static final String UI_URL = "http://uiserver:8181/ui";
 
     @Test
     @Order(10)
-    public void testAccessStart() throws NotFoundException, DockerException, InterruptedException, IOException {
-
+    public void testStart() throws NotFoundException, DockerException, InterruptedException, IOException {
+        driver.navigate().to(UI_URL);
+        
     }
 
     @BeforeAll
@@ -42,6 +50,12 @@ public class KarafVaadinTest extends TestCase {
         scenario.add(new Karaf("karaf", prop.getString("docker.mhus-apache-karaf.version"), 
                 "debug",
                 "p:28181+:8181"
+                ));
+        
+        scenario.add(new DockerContainer("selenium", "selenium/standalone-chrome-debug:3.141.59-bismuth", 
+                "p:25900+:5900",
+                "p:24444+:4444",
+                "l:karaf:uiserver"
                 ));
         
         scenario.destroyPrefix();
@@ -113,11 +127,15 @@ public class KarafVaadinTest extends TestCase {
 
         }
 
+        int port = scenario.get("selenium").getPortBinding(5900);
+        driver = new RemoteWebDriver(new URL("http://localhost:" + port), DesiredCapabilities.chrome());
+        
     }
     
     @AfterAll
     public static void stopDocker() {
         // scenario.destroy();
+        driver.close();
     }
     
     
