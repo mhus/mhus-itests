@@ -6,48 +6,42 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+
+import com.github.dockerjava.api.exception.DockerException;
 
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.tests.TestCase;
-import de.mhus.lib.tests.docker.AnsiLogFilter;
 import de.mhus.lib.tests.docker.DockerScenario;
 import de.mhus.lib.tests.docker.Karaf;
 import de.mhus.lib.tests.docker.LogStream;
 
-@Disabled
 @TestMethodOrder(OrderAnnotation.class)
-public class KarafMongoTest extends TestCase {
+public class KarafVaadinTest extends TestCase {
 
     private static DockerScenario scenario;
     private static MProperties prop;
 
     @Test
-    @Order(1)
-    public void testJmsConnection() throws NotFoundException, IOException, InterruptedException {
+    @Order(10)
+    public void testAccessStart() throws NotFoundException, DockerException, InterruptedException, IOException {
+
     }
 
     @BeforeAll
     public static void startDocker() throws NotFoundException, IOException, InterruptedException {
         
         prop = TestUtil.loadProperties();
-
-        scenario = new DockerScenario();
         
-      scenario.add("mongo", "mongo:4.4.0", 
-          "env:MONGO_INITDB_ROOT_USERNAME=mongoadmin",
-          "env:MONGO_INITDB_ROOT_PASSWORD=nein"
-      );
-
+        scenario = new DockerScenario();
         scenario.add(new Karaf("karaf", prop.getString("docker.mhus-apache-karaf.version"), 
-                "debug", 
-                "link:mongo:mongoserver"
+                "debug",
+                "p:28181+:8181"
                 ));
         
         scenario.destroyPrefix();
@@ -55,30 +49,26 @@ public class KarafMongoTest extends TestCase {
         
         MThread.sleep(1000);
 
-        // jms
-        scenario.waitForLogEntry("mongo", "Waiting for connections", 0);
-        
-        // karaf
         scenario.waitForLogEntry("karaf", "@karaf()>", 0);
         
+        try (LogStream stream = scenario.exec("karaf", "ls /home/user/.m2" )) {
+            // scenario.waitForLogEntry(stream, "repository");
+            String res = stream.readAll();
+            assertTrue(res.contains("repository"));
+            assertTrue(res.contains("settings.xml")); // must be there since karaf is in debug and mounted local .m2 directory
+        }
+        
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setFilter(new AnsiLogFilter());
+            stream.setCapture(true);
             scenario.attach(stream, 
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
                 "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
-                "feature:install mhu-mongo mhu-dev\n" +
+                "feature:install mhu-vaadin-ui mhu-dev\n" +
+                "bundle:install -s mvn:de.mhus.lib.itest/examples-vaadin/"+prop.getString("project.version")+"\n" +
+                "list\n" +
                 "a=HGDFhjasdhj\n" );
         
-            scenario.waitForLogEntry(stream, "Done.");
-        }
-
-        try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setFilter(new AnsiLogFilter());
-            stream.setCapture(true);
-            scenario.attach(stream, 
-                    "list\n" +
-                    "a=HGDFhjasdhx\n" );
-            scenario.waitForLogEntry(stream, "HGDFhjasdhx");
+            scenario.waitForLogEntry(stream, "HGDFhjasdhj");
             
             String out = stream.getCaptured();
             
@@ -86,8 +76,8 @@ public class KarafMongoTest extends TestCase {
             assertTrue(pos1 > 0);
             int pos2 = out.indexOf("@karaf()", pos1);
             assertTrue(pos2 > 0);
-            out = out.substring(pos1, pos2);
             
+            out = out.substring(pos1, pos2);
             assertTrue(out.contains("lib-annotations"));
             assertTrue(out.contains("lib-core"));
             assertTrue(out.contains("lib-j2ee"));
@@ -100,10 +90,9 @@ public class KarafMongoTest extends TestCase {
         
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
-            stream.setFilter(new AnsiLogFilter());
+            
             scenario.attach(stream, 
                     "dev-res -y cp default\n" +
-                    "dev-res -y cp examples-mongo\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
@@ -111,24 +100,25 @@ public class KarafMongoTest extends TestCase {
 
             String out = stream.getCaptured();
 
-//            assertTrue(out.contains("[doConfigure]"));
+            assertTrue(out.contains("[doConfigure]"));
             assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
         }
-        
+
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             scenario.attach(stream, 
                     "access restart\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVU\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVU");
+
         }
-        
+
     }
     
     @AfterAll
     public static void stopDocker() {
         // scenario.destroy();
     }
-
+    
     
 }
