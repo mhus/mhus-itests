@@ -1,9 +1,11 @@
 package de.mhus.lib.itest.cases;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.function.BooleanSupplier;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,7 +13,9 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -38,7 +42,42 @@ public class KarafVaadinTest extends TestCase {
     @Order(10)
     public void testStart() throws NotFoundException, DockerException, InterruptedException, IOException {
         driver.navigate().to(UI_URL);
-        
+        {
+            WebElement ele = driver.findElement(By.id("gwt-uid-3"));
+            assertNotNull(ele);
+            ele.sendKeys("admin");
+        }
+        {
+            WebElement ele = driver.findElement(By.id("gwt-uid-5"));
+            assertNotNull(ele);
+            ele.sendKeys("secret");
+        }
+        {
+            WebElement ele = findVaadinButton("Sign In");
+            assertNotNull(ele);
+            ele.click();
+        }
+        {
+            assertTrue(waitForText("Spaces", 1000, 10));
+            assertTrue(driver.getPageSource().contains("Test Space"));
+        }
+    }
+
+    boolean waitForText(String text, int sleep, int loops ) {
+        for (int i = 0; i < loops; i++) {
+            MThread.sleep(sleep);
+            if (driver.getPageSource().contains(text)) return true;
+        }
+        return false;
+    }
+
+    WebElement findVaadinButton(String text) {
+        for (WebElement e : driver.findElements(By.className("v-button-caption"))) {
+            System.out.println(e.getText());
+            if (e.getText().equals(text))
+                return e.findElement(By.xpath("./../.."));
+        }
+        return null;
     }
 
     @BeforeAll
@@ -127,8 +166,8 @@ public class KarafVaadinTest extends TestCase {
 
         }
 
-        int port = scenario.get("selenium").getPortBinding(5900);
-        driver = new RemoteWebDriver(new URL("http://localhost:" + port), DesiredCapabilities.chrome());
+        int port = scenario.get("selenium").getPortBinding(4444);
+        driver = new RemoteWebDriver(new URL("http://localhost:" + port + "/wd/hub"), DesiredCapabilities.chrome());
         
     }
     

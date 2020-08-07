@@ -16,8 +16,15 @@ public class TestSpace extends TabSheet {
     private void initUi() {
         setSizeFull();
         addTab(formEditor(), "FormEditor");
+        addTab(tableTab(), "Table");
     }
     
+    private Component tableTab() {
+        MhuTableTab tab = new MhuTableTab();
+        
+        return tab;
+    }
+
     private Component formEditor() {
         BeanListEditorSample form = new BeanListEditorSample();
         form.initUI();

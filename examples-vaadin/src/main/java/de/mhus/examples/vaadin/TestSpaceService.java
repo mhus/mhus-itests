@@ -10,7 +10,7 @@ import de.mhus.lib.vaadin.annotations.GuiSpaceDefinition;
 import de.mhus.lib.vaadin.desktop.AbstractGuiSpace;
 import de.mhus.lib.vaadin.desktop.GuiSpaceService;
 
-@Component(service = GuiSpaceService.class)
+@Component(service = GuiSpaceService.class,immediate = true)
 @GuiSpaceDefinition(name = "Test",description = "Test Space", spaceClass = TestSpace.class)
 public class TestSpaceService extends AbstractGuiSpace {
 
