@@ -1,0 +1,9 @@
+<mhus>
+  <de.mhus.lib.core.service.ServerIdent
+    persistent="no"
+    identPattern="$#hostname$-$ip$"
+  >
+    <initiator class="de.mhus.lib.core.mapi.DockerInitializer" />
+    <initiator class="de.mhus.lib.core.mapi.LocalIpInitializer" />
+  </de.mhus.lib.core.service.ServerIdent>
+</mhus>

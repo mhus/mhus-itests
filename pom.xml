@@ -58,6 +58,7 @@
        <module>examples-adb</module>
        <module>examples-jms</module>
        <module>examples-vaadin</module>
+       <module>examples-reactive</module>
        <module>test-cases</module>
     </modules>
 
