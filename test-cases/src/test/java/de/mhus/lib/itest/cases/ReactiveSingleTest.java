@@ -2,7 +2,6 @@ package de.mhus.lib.itest.cases;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.net.URL;
@@ -57,6 +56,64 @@ public class ReactiveSingleTest extends TestCase {
         }
     }
     
+    @Test
+    @Order(10)
+    public void testSecond() throws NotFoundException, DockerException, InterruptedException, IOException {
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "pstart \"bpm://de.mhus.cherry.reactive.examples.simple1.S1Process:0.0.1/de.mhus.cherry.reactive.examples.simple1.S1Pool;customId=test;customerId=alf?text1=second\"\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertFalse(out.equals("Exception"));
+            assertFalse(out.equals("ERROR"));
+        }
+        
+        boolean done = false;
+        for (int i = 0 ; i < 20; i++) {
+            MThread.sleep(5000);
+            try (LogStream stream = new LogStream(scenario, "karaf")) {
+                stream.setCapture(true);
+                
+                scenario.attach(stream, 
+                        "pcase -a -ta list\n" +
+                        "a=quiweyBNVNB\n" );
+    
+                scenario.waitForLogEntry(stream, "quiweyBNVNB");
+    
+                String out = stream.getCaptured();
+                if (out.contains("CLOSED")) {
+                    done = true;
+                    break;
+                }
+                assertTrue(out.contains("bpm://de.mhus.cherry.reactive.examples.simple1.S1Process:0.0.1/de.mhus.cherry.reactive.examples.simple1.S1Pool"));
+                assertFalse(out.equals("Exception"));
+                assertFalse(out.equals("ERROR"));
+            }
+        }
+        assertTrue(done,"Process was not processed");
+        
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "pengine archive\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("Archive all"));
+            assertFalse(out.equals("Exception"));
+            assertFalse(out.equals("ERROR"));
+        }
+    }
+    
+    
     @BeforeAll
     public static void startDocker() throws NotFoundException, IOException, InterruptedException {
         
@@ -65,12 +122,7 @@ public class ReactiveSingleTest extends TestCase {
         scenario = new DockerScenario();
         
         scenario.add("jaeger", "jaegertracing/all-in-one:1.18.1",
-                "p:5775:5775/udp",
-                "p:6831:6831/udp",
-                "p:6832:6832/udp",
-                "p:5778:5778",
-                "p:16686:16686",
-                "p:14268:14268"
+                "p:16686+:16686"
                 );
                 
         scenario.add("jms", "webcenter/activemq:5.14.3", 
