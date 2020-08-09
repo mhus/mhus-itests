@@ -7,6 +7,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+// http://localhost:24444/wd/hub/static/resource/hub.html
+
 public class KarafVaadinSeleniumDev {
 
     private static final String UI_URL = "http://uiserver:8181/ui";
