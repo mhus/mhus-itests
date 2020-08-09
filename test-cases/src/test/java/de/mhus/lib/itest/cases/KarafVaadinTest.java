@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.function.BooleanSupplier;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -29,6 +27,7 @@ import de.mhus.lib.tests.docker.DockerContainer;
 import de.mhus.lib.tests.docker.DockerScenario;
 import de.mhus.lib.tests.docker.Karaf;
 import de.mhus.lib.tests.docker.LogStream;
+import de.mhus.lib.tests.selenium.SeleniumVaadinGwt;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class KarafVaadinTest extends TestCase {
@@ -41,43 +40,27 @@ public class KarafVaadinTest extends TestCase {
     @Test
     @Order(10)
     public void testStart() throws NotFoundException, DockerException, InterruptedException, IOException {
-        driver.navigate().to(UI_URL);
+        
+        SeleniumVaadinGwt page = new SeleniumVaadinGwt(driver);
+        page.navigateTo(UI_URL);
         {
-            WebElement ele = driver.findElement(By.id("gwt-uid-3"));
+            WebElement ele = page.findVaadinInputByLabel("Username");
             assertNotNull(ele);
             ele.sendKeys("admin");
         }
         {
-            WebElement ele = driver.findElement(By.id("gwt-uid-5"));
+            WebElement ele = page.findVaadinInputByLabel("Password");
             assertNotNull(ele);
             ele.sendKeys("secret");
         }
         {
-            WebElement ele = findVaadinButton("Sign In");
+            WebElement ele = page.clickVaadinButton("Sign In");
             assertNotNull(ele);
-            ele.click();
         }
         {
-            assertTrue(waitForText("Spaces", 1000, 10));
-            assertTrue(driver.getPageSource().contains("Test Space"));
+            assertTrue(page.waitForText("Spaces", 1000, 10));
+            assertTrue(page.containsText("Test Space"));
         }
-    }
-
-    boolean waitForText(String text, int sleep, int loops ) {
-        for (int i = 0; i < loops; i++) {
-            MThread.sleep(sleep);
-            if (driver.getPageSource().contains(text)) return true;
-        }
-        return false;
-    }
-
-    WebElement findVaadinButton(String text) {
-        for (WebElement e : driver.findElements(By.className("v-button-caption"))) {
-            System.out.println(e.getText());
-            if (e.getText().equals(text))
-                return e.findElement(By.xpath("./../.."));
-        }
-        return null;
     }
 
     @BeforeAll
