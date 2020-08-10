@@ -106,10 +106,10 @@ public class ReactiveMultiTest extends TestCase {
                 scenario.waitForLogEntry(stream, ">>> Stopping ...");
         } catch (EOFException e) {}
         
-        assertTrue(maxId > 10058); // minimum created
+        assertTrue(maxId > 10060); // minimum 60 created processed - if not something went wrong
         
         boolean done = false;
-        for (int i = 0; i < 30; i++) { // wait maximal 30 minutes for all processes to stop
+        for (int i = 0; i < 10; i++) { // wait maximal 10 minutes for all processes to stop
             MThread.sleep(MPeriod.MINUTE_IN_MILLISECOUNDS);
             try (LogStream stream = new LogStream(scenario, "karaf0")) {
                 stream.setCapture(true);
@@ -136,6 +136,12 @@ public class ReactiveMultiTest extends TestCase {
             }
         }
         assertTrue(done);
+        
+        System.out.println();
+        System.out.println("--------------------------");
+        System.out.println(" Created: " + (maxId - 9999));
+        System.out.println("--------------------------");
+        
     }
     
     
