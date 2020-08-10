@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -351,4 +352,11 @@ public abstract class KarafAdbAbstract extends TestCase {
         }
         
     }
+    
+    @AfterAll
+    public static void stopDocker() {
+        if (prop.getBoolean("docker.destroy.containers", true))
+            scenario.destroy();
+    }
+    
 }

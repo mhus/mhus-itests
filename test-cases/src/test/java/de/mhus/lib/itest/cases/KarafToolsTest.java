@@ -133,7 +133,6 @@ public class KarafToolsTest extends TestCase {
             assertTrue(out.contains("org.apache.felix.framework"));
             String[] lines = out.split("\n");
             assertTrue(lines.length > 5);
-            assertTrue(lines[lines.length-1].contains("karaf-dev")); // last installed bundle
         }
     }
     
@@ -205,9 +204,9 @@ public class KarafToolsTest extends TestCase {
             scenario.waitForLogEntry(stream, "mbnB12NVyiuGHF");
 
             String out = stream.getCaptured();
-            assertTrue(out.contains("Free:"));
+            assertTrue(out.contains("Free :"));
             assertTrue(out.contains("Total:"));
-            assertTrue(out.contains("Max:"));
+            assertTrue(out.contains("Max  :"));
         }
     }
     
@@ -415,7 +414,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "bundle:watch\n" +
+                    "lock -ta list\n" +
                     "a=mbnB64NVyiuGHF\n" );
 
             scenario.waitForLogEntry(stream, "mbnB64NVyiuGHF");
@@ -484,12 +483,12 @@ public class KarafToolsTest extends TestCase {
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
-            MThread.sleep(5000); // a long time - wait for configuration manager
+            MThread.sleep(10000); // a long time - wait for configuration manager
 
             String out = stream.getCaptured();
 
-            assertTrue(out.contains("[doConfigure]"));
-            assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
+            assertTrue(out.contains("[KarafCfgManager::Register PID]"));
+            assertTrue(out.contains("Updating configuration from de.mhus.osgi.commands.watch.PersistentWatch.cfg"));
         }
 
         try (LogStream stream = new LogStream(scenario, "karaf")) {
@@ -505,7 +504,8 @@ public class KarafToolsTest extends TestCase {
     
     @AfterAll
     public static void stopDocker() {
-        // scenario.destroy();
+        if (prop.getBoolean("docker.destroy.containers", true))
+            scenario.destroy();
     }
     
     

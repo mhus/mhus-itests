@@ -156,8 +156,9 @@ public class KarafVaadinTest extends TestCase {
     
     @AfterAll
     public static void stopDocker() {
-        // scenario.destroy();
         driver.close();
+        if (prop.getBoolean("docker.destroy.containers", true))
+            scenario.destroy();
     }
     
     

@@ -59,9 +59,4 @@ public class KarafAdbPsqlTest extends KarafAdbAbstract {
         
     }
     
-    @AfterAll
-    public static void stopDocker() {
-        // scenario.destroy();
-    }
-
 }

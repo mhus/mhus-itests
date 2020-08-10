@@ -60,10 +60,5 @@ public class KarafAdbMariaDbTest extends KarafAdbAbstract {
         prepareKaraf("maria", "");
         
     }
-    
-    @AfterAll
-    public static void stopDocker() {
-        // scenario.destroy();
-    }
 
 }

@@ -156,7 +156,8 @@ public class KarafTransformTest extends TestCase {
     
     @AfterAll
     public static void stopDocker() {
-        // scenario.destroy();
+        if (prop.getBoolean("docker.destroy.containers", true))
+            scenario.destroy();
     }
     
     

@@ -25,6 +25,16 @@ public class TestUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // overload with local config
+        {
+            File file = new File("../../itest.properties");
+            if (file.exists()) {
+                MProperties local = MProperties.load(file);
+                prop.putReadProperties(local);
+            } else
+                System.out.println("Local config not found " + file.getAbsolutePath());
+        }
+        
         System.out.println(prop);
         return prop;
     }
