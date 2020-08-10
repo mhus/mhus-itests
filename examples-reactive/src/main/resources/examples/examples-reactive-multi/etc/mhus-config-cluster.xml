@@ -1,6 +1,0 @@
-<mhus>
-<de.mhus.lib.core.service.ClusterApi
-   enabled="true"
-   lockValidate="false"
-/>
-</mhus>
