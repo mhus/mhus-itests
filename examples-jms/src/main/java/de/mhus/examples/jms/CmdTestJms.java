@@ -13,8 +13,11 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.MStopWatch;
+import de.mhus.lib.core.util.Lorem;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.jms.ClientJms;
 import de.mhus.lib.jms.ClientJson;
@@ -22,8 +25,8 @@ import de.mhus.lib.jms.ClientJsonObject;
 import de.mhus.lib.jms.ClientService;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.JmsDestination;
+import de.mhus.lib.jms.PojoServiceDescriptor;
 import de.mhus.lib.jms.RequestResult;
-import de.mhus.lib.jms.ServiceDescriptor;
 import de.mhus.osgi.api.jms.JmsUtil;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 
@@ -60,14 +63,44 @@ public class CmdTestJms extends AbstractCmd {
             return onBook();
         if (cmd.equals("service.checkout"))
             return onServiceCheckOut();
+        if (cmd.equals("stress"))
+            return onStress();
         return null;
     }
 
     @SuppressWarnings("resource")
+    private Object onStress() throws MException, JMSException {
+        String load = Lorem.createWithSize(M.to(parameters[2], 1024));
+        int rounds = M.to(parameters[3], 1000);
+        System.out.println(parameters[4] + ": Load: " + load.length());
+        System.out.println(parameters[4] + ": Rounds: " + rounds);
+        JmsConnection con = JmsUtil.getConnection(parameters[0]);
+        if (con == null) throw new MException("connection not found",parameters[0]);
+        
+        try (ClientJms client = new ClientJms(new JmsDestination(parameters[1]).setConnection(con))) {
+            MStopWatch watch = new MStopWatch("jms").start();
+            for (int i = 0; i < rounds; i++) {
+                if (i % 1000 == 0)
+                    System.out.println(parameters[4] + ": " + i + " / " + rounds);
+                TextMessage msg = client.createTextMessage(load);
+                msg.setBooleanProperty("quiet", true);
+                Message res = client.sendJms(msg);
+                if (!load.equals(((TextMessage)res).getText()))
+                    throw new MException("result is invalid",i);
+            }
+            watch.stop().print();
+        }
+        return null;
+    }
+    
+    @SuppressWarnings("resource")
     private Object onServiceCheckOut() throws MException {
         JmsConnection con = JmsUtil.getConnection(parameters[0]);
         if (con == null) throw new MException("connection not found",parameters[0]);
-        try (ClientService<LibraryService> client = new ClientService<LibraryService>(new JmsDestination(parameters[1]).setConnection(con), new ServiceDescriptor(LibraryService.class))) {
+        try (ClientService<LibraryService> client = new ClientService<LibraryService>(
+                new JmsDestination(parameters[1]).setConnection(con), 
+                new PojoServiceDescriptor(LibraryService.class))
+            ) {
             boolean ret = client.getObject().checkOut(parameters[2], parameters[3]);
             return ret;
         }

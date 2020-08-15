@@ -215,8 +215,8 @@ public class ReactiveSingleTest extends TestCase {
             stream.setCapture(true);
             scenario.attach(stream, 
                     "list\n" +
-                    "a=HGDFhjasdhx\n" );
-            scenario.waitForLogEntry(stream, "HGDFhjasdhx");
+                    "a=JKHIUY\na=${a}675GH\n" );
+            scenario.waitForLogEntry(stream, "JKHIUY675GH");
             
             String out = stream.getCaptured();
             

@@ -46,12 +46,13 @@ public class BookNode extends ObjectListNode<Book,Book> {
     }
 
     @Override
-    protected Book doCreateObj(CallContext context) throws IOException {
+    protected Book doCreateObj(CallContext context) throws IOException, MException {
 
         Book book = new Book();
         PojoModelFactory schema = getPojoModelFactory();
         MPojo.propertiesToPojo(context.getParameters(), book, schema, null, true);
-
+        book.setIsbn(context.getParameters().getString("isbn")); // force should set isbn
+        
         books.put(book.getIsbn(), book);
 
         return book;

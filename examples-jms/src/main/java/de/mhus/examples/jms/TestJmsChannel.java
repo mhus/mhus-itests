@@ -14,13 +14,15 @@ public class TestJmsChannel extends ServerJms {
 
     @Override
     public Message received(Message msg) throws JMSException {
-        System.out.println("GET " + msg);
+        if (!msg.propertyExists("quiet") && !msg.getBooleanProperty("quiet"))
+            System.out.println("GET " + msg);
         return msg;
     }
 
     @Override
     public void receivedOneWay(Message msg) throws JMSException {
-        System.out.println("GET ONE WAY: " + msg);
+        if (!msg.propertyExists("quiet") && !msg.getBooleanProperty("quiet"))
+            System.out.println("GET ONE WAY: " + msg);
     }
 
 }

@@ -56,6 +56,11 @@ public class TestServerService extends AbstractJmsDataChannel {
         public boolean isAvailable(String isbn) {
             return !lent.containsKey(isbn);
         }
+
+        @Override
+        public String silentCall(String load) {
+            return load;
+        }
         
     }
 

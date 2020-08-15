@@ -12,5 +12,8 @@ public interface LibraryService {
 
     @Public
     boolean isAvailable(String isbn);
+
+    @Public
+    String silentCall(String load);
     
 }

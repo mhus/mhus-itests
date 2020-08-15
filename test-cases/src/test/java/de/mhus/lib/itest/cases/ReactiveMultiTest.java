@@ -221,12 +221,15 @@ public class ReactiveMultiTest extends TestCase {
             }
         }
         
+        boolean failed = false;
         for (PrepareJob job : jobs) {
             if (job.error != null) {
+                System.out.println("Error in job " + job.nr);
                 job.error.printStackTrace();
-                fail("Job failed " + job.nr);
+                failed = true;
             }
         }
+        assertFalse(failed);
         
     }
     
@@ -275,19 +278,20 @@ public class ReactiveMultiTest extends TestCase {
 
             scenario.attach(stream, 
                     "bundle:install -s mvn:de.mhus.lib.itest/examples-reactive/"+prop.getString("project.version")+"\n" +
-                    "a=HGDFhjasdhz\n" );
-            scenario.waitForLogEntry(stream, "HGDFhjasdhz");
+                    "a=JKHIUY\na=${a}675GH\n" );
+            scenario.waitForLogEntry(stream, "JKHIUY675GH");
         }
         
-        scenario.waitForLogEntry("karaf"+a, "Done.", 1);
+        MThread.sleep(10000);
+//        scenario.waitForLogEntry("karaf"+a, "Done.", 1);
         
         try (LogStream stream = new LogStream(scenario, "karaf"+a)) {
             stream.setFilter(new AnsiLogFilter());
             stream.setCapture(true);
             scenario.attach(stream, 
                     "list\n" +
-                    "a=HGDFhjasdhx\n" );
-            scenario.waitForLogEntry(stream, "HGDFhjasdhx");
+                    "a=JKHIUY\na=${a}675GH\n" );
+            scenario.waitForLogEntry(stream, "JKHIUY675GH");
             
             String out = stream.getCaptured();
             
@@ -334,8 +338,8 @@ public class ReactiveMultiTest extends TestCase {
             stream.setCapture(true);
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
-                    "dev-res -y cp examples-reactive-multi\n" +
                     "dev-res -y cp default\n" +
+                    "dev-res -y cp examples-reactive-multi\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");

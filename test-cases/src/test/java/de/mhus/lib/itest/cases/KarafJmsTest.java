@@ -1,8 +1,10 @@
 package de.mhus.lib.itest.cases;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -152,6 +154,130 @@ public class KarafJmsTest extends TestCase {
 //        }
 //    }
     
+    @Test
+    @Order(50)
+    public void testStress0() throws NotFoundException, IOException, InterruptedException {
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            
+            String load = "1001";
+            String rounds = "1002";
+            
+            scenario.attach(stream, 
+                    "itest:jms stress test test " + load + " " + rounds + " X\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("Load: " + load));
+            assertTrue(out.contains("Rounds: " + rounds));
+            assertTrue(out.contains("jms="));
+            assertFalse(out.contains("Exception"));
+        }
+    }
+    
+    @Test
+    @Order(51)
+    public void testStress1() throws NotFoundException, IOException, InterruptedException {
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            
+            String load = "1000001";
+            String rounds = "1002";
+            
+            scenario.attach(stream, 
+                    "itest:jms stress test test " + load + " " + rounds + " Y\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("Load: " + load));
+            assertTrue(out.contains("Rounds: " + rounds));
+            assertTrue(out.contains("jms="));
+            assertFalse(out.contains("Exception"));
+        }
+    }
+
+    @Test
+    @Order(52)
+    public void testStress2() throws NotFoundException, IOException, InterruptedException {
+        String load = "10001";
+        String rounds = "20001";
+        int parallel = 5; // not more parallel ssh connections
+        
+        LinkedList<Job> jobs = new LinkedList<>();
+        
+        for (int i = 0; i < parallel; i++) {
+            Job job = new Job();
+            Thread thread = new Thread(job);
+            job.thread = thread;
+            job.nr = i;
+            job.load = load;
+            job.rounds = rounds;
+            jobs.add(job);
+            thread.start();
+        }
+        
+        // wait
+        while (true) {
+            boolean alive = false;
+            for (Job job : jobs) {
+                if (job.thread.isAlive()) {
+                    alive = true;
+                    System.out.println("=== Running: " + job.nr);
+                }
+            }
+            if (!alive) break;
+            MThread.sleep(10000);
+        }
+            
+        boolean error = false;
+        for (Job job : jobs) {
+            if (job.error != null) {
+                System.err.println("Error in " + job.nr);
+                error = true;
+            }
+        }
+        assertFalse(error);
+    }
+    
+    private static class Job implements Runnable {
+
+        public String rounds;
+        public String load;
+        public int nr;
+        public Thread thread;
+        public Throwable error;
+
+        @Override
+        public void run() {
+            try {
+                MThread.sleep((int)(5000d * Math.random()) );
+                System.out.println(">>> Start " + nr);
+                try (LogStream stream = new LogStream(scenario, "karaf")) {
+                    stream.setCapture(true);
+                    
+                    scenario.exec(stream, new String[] {"/opt/karaf/bin/client"},null,false,null,null,
+                            "\n\n\nitest:jms stress test test " + load + " " + rounds + " " + nr + "\na=JKHIUY\na=${a}675GH\n");
+                    scenario.waitForLogEntry(stream, "JKHIUY675GH");
+    
+                    String out = stream.getCaptured();
+                    assertTrue(out.contains("Load: " + load));
+                    assertTrue(out.contains("Rounds: " + rounds));
+                    assertTrue(out.contains("jms="));
+                    assertFalse(out.contains("Exception"));
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+                error = t;
+            }
+            System.out.println("<<< Finished " + nr);
+        }
+        
+    }
+
     @BeforeAll
     public static void startDocker() throws NotFoundException, IOException, InterruptedException {
         
@@ -183,7 +309,8 @@ public class KarafJmsTest extends TestCase {
         scenario.waitForLogEntry("jms", "activemq entered RUNNING state", 0);
         
         // karaf
-        scenario.waitForLogEntry("karaf", "@karaf()>", 0);
+//        scenario.waitForLogEntry("karaf", "@karaf()>", 0);
+        scenario.waitForLogEntry("karaf", "Done.", 0);
         
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setFilter(new AnsiLogFilter());

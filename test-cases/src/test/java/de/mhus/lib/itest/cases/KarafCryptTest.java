@@ -457,7 +457,8 @@ public class KarafCryptTest extends TestCase {
         
         MThread.sleep(1000);
 
-        scenario.waitForLogEntry("karaf", "@karaf()>", 0);
+//        scenario.waitForLogEntry("karaf", "@karaf()>", 0);
+        scenario.waitForLogEntry("karaf", "Done.", 0);
         
         try (LogStream stream = scenario.exec("karaf", "ls /home/user/.m2" )) {
             // scenario.waitForLogEntry(stream, "repository");
@@ -506,12 +507,12 @@ public class KarafCryptTest extends TestCase {
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
-            MThread.sleep(5000); // a long time - wait for configuration manager
+            MThread.sleep(10000); // a long time - wait for configuration manager
 
             String out = stream.getCaptured();
 
 //            assertTrue(out.contains("[doConfigure]"));
-            assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
+            assertTrue(out.contains("[KarafCfgManager::Register PID]"));
         }
 
         try (LogStream stream = new LogStream(scenario, "karaf")) {
