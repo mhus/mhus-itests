@@ -388,6 +388,15 @@ public class KarafJmsTest extends TestCase {
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVU");
         }
         
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            scenario.attach(stream, 
+                    "channel-beat\n" +
+                    "a=HJGPODGHHKJNBHJGJHHJVU\n" );
+
+            scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVU");
+        }
+        MThread.sleep(5000);
+        
     }
     
     @AfterAll
