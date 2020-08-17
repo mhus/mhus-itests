@@ -277,7 +277,7 @@ public class KarafRestTest extends TestCase {
             scenario.attach(stream, 
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
                 "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
-                "feature:install mhu-base mhu-dev mhu-rest-servlet\n" +
+                "feature:install mhu-base mhu-dev mhu-rest\n" +
                 "bundle:install -s mvn:de.mhus.lib.itest/examples-rest/"+prop.getString("project.version")+"\n" +
                 "list\n" +
                 "a=HGDFhjasdhj\n" );
@@ -303,7 +303,6 @@ public class KarafRestTest extends TestCase {
             assertTrue(out.contains("rest-core"));
             assertTrue(out.contains("rest-osgi"));
             assertTrue(out.contains("rest-karaf"));
-            assertTrue(out.contains("rest-osgi-servlet"));
             assertTrue(out.contains("examples-rest"));
         }
         
@@ -312,6 +311,7 @@ public class KarafRestTest extends TestCase {
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
                     "dev-res -y cp default\n" +
+                    "sb-create de.mhus.rest.osgi.RestServlet\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
@@ -331,6 +331,25 @@ public class KarafRestTest extends TestCase {
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVU");
         }
         
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setCapture(true);
+            stream.setFilter(new AnsiLogFilter());
+            scenario.attach(stream, 
+                "list\n" +
+                "a=HGDFhjasdhj\n" );
+        
+            scenario.waitForLogEntry(stream, "HGDFhjasdhj");
+            
+            String out = stream.getCaptured();
+            
+            int pos1 = out.indexOf("List Threshold");
+            assertTrue(pos1 > 0);
+            int pos2 = out.indexOf("@karaf()", pos1);
+            assertTrue(pos2 > 0);
+            
+            out = out.substring(pos1, pos2);
+            assertTrue(out.contains("service-de.mhus.rest.osgi.restservlet.xml"));
+        }
     }
     
     @AfterAll
