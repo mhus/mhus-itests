@@ -32,7 +32,12 @@
 	    <artifactId>unirest-java</artifactId>
 	    <version>3.7.04</version>
     </dependency>
-    
+	<dependency>
+	  <groupId>org.java-websocket</groupId>
+	  <artifactId>Java-WebSocket</artifactId>
+	  <version>1.5.1</version>
+	</dependency>
+
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>

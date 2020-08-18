@@ -5,7 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.net.URI;
 
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -243,6 +246,66 @@ public class KarafRestTest extends TestCase {
         }
     }
     
+    @Test
+    @Order(12)
+    public void testWebSocket() throws NotFoundException, InterruptedException, IOException, UnirestException {
+        int port = scenario.get("karaf").getPortBinding(8181);
+        String host = scenario.get("karaf").getExternalHost();
+        String uri = "sw://" + host + ":" + port + "/restsocket/library?_ticket=admin:secret";
+        try (LogStream stream = scenario.attach("karaf", null)) {
+            stream.setCapture(true);
+            
+            MyWebSocketClient client = new MyWebSocketClient(URI.create(uri));
+            client.connect();
+            MThread.sleep(2000);
+            assertTrue(client.isOpen());
+            client.send("true\n");
+            MThread.sleep(2000);
+            assertTrue(client.text.toString().contains("Hello "));
+            client.send("Hello World\n");
+            client.close();
+            MThread.sleep(1000);
+            
+            String out = stream.getCaptured();
+            
+            assertTrue(out.contains("Streaming.Text:true"));
+            assertTrue(out.contains("Streaming.Text:Hello World"));
+            
+        } finally {
+        }
+    }
+    
+    private class MyWebSocketClient extends WebSocketClient {
+
+        public MyWebSocketClient(URI serverUri) {
+            super(serverUri);
+        }
+
+        StringBuffer text = new StringBuffer();
+        
+        @Override
+        public void onOpen(ServerHandshake handshakedata) {
+            System.out.println("MyWebSocketClient:Open");
+        }
+
+        @Override
+        public void onMessage(String message) {
+            System.out.println("MyWebSocketClient:Message " + message);
+            text.append(message);
+        }
+
+        @Override
+        public void onClose(int code, String reason, boolean remote) {
+            System.out.println("MyWebSocketClient:Closed");
+        }
+
+        @Override
+        public void onError(Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+    
     @BeforeAll
     public static void startDocker() throws NotFoundException, IOException, InterruptedException {
         
@@ -312,6 +375,7 @@ public class KarafRestTest extends TestCase {
             scenario.attach(stream, 
                     "dev-res -y cp default\n" +
                     "sb-create de.mhus.rest.osgi.RestServlet\n" +
+                    "sb-create de.mhus.rest.osgi.RestWebSocketServlet\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
@@ -349,6 +413,8 @@ public class KarafRestTest extends TestCase {
             
             out = out.substring(pos1, pos2);
             assertTrue(out.contains("service-de.mhus.rest.osgi.restservlet.xml"));
+//            assertTrue(out.contains("service-de.mhus.rest.osgi.restwebsocketservlet.xml"));
+            assertTrue(out.contains("service-de.mhus.rest.osgi.restwebsockets"));
         }
     }
     
