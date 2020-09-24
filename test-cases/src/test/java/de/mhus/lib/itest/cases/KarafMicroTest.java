@@ -43,7 +43,7 @@ public class KarafMicroTest extends TestCase {
             assertTrue(out.contains("de.mhus.osgi.dev.micro.AuthenticationOnlyOperation"));
             assertTrue(out.contains("de.mhus.osgi.dev.critical.micro.Hello"));
             assertTrue(out.contains("0.0.0"));
-            assertTrue(out.contains("1.0.0"));
+            assertTrue(out.contains("1.1.0"));
             assertTrue(out.contains("2.0.0"));
         }
     }
@@ -81,7 +81,7 @@ public class KarafMicroTest extends TestCase {
             String out = stream.getCaptured();
             assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/0.0.0"));
             assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.micro.AuthenticationOnlyOperation/1.0.0"));
-            assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/1.0.0"));
+            assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/1.1.0"));
             assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/2.0.0"));
 
         }
@@ -103,7 +103,7 @@ public class KarafMicroTest extends TestCase {
             assertTrue(out.contains("de.mhus.micro.oper.rest.OperationsNode"));
             assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/0.0.0"));
             assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.micro.AuthenticationOnlyOperation/1.0.0"));
-            assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/1.0.0"));
+            assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/1.1.0"));
             assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/2.0.0"));
 
         }
@@ -125,7 +125,7 @@ public class KarafMicroTest extends TestCase {
             assertFalse(out.contains("de.mhus.osgi.dev.micro.AuthenticationOnlyOperation"));
             assertFalse(out.contains("de.mhus.osgi.dev.critical.micro.Hello"));
             assertFalse(out.contains("0.0.0"));
-            assertFalse(out.contains("1.0.0"));
+            assertFalse(out.contains("1.1.0"));
             assertFalse(out.contains("2.0.0"));
         }
     }
@@ -163,7 +163,7 @@ public class KarafMicroTest extends TestCase {
             String out = stream.getCaptured();
             assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/0.0.0"));
             assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.micro.AuthenticationOnlyOperation/1.0.0"));
-            assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/1.0.0"));
+            assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/1.1.0"));
             assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/2.0.0"));
 
         }
@@ -185,7 +185,7 @@ public class KarafMicroTest extends TestCase {
             assertFalse(out.contains("de.mhus.micro.oper.rest.OperationsNode"));
             assertFalse(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/0.0.0"));
             assertFalse(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.micro.AuthenticationOnlyOperation/1.0.0"));
-            assertFalse(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/1.0.0"));
+            assertFalse(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/1.1.0"));
             assertFalse(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.critical.micro.Hello/2.0.0"));
 
         }
@@ -197,15 +197,15 @@ public class KarafMicroTest extends TestCase {
     public void test1ExecuteLocal() throws NotFoundException, IOException, InterruptedException {
         try (LogStream stream = new LogStream(scenario, "karaf1")) {
             stream.setCapture(true);
-            
+
             scenario.attach(stream, 
-                    "operation-execute -l trans=local de.mhus.osgi.dev.critical.micro.Hello 1.0.0\n" +
+                    "operation-execute -l trans=local de.mhus.osgi.dev.critical.micro.Hello 1.0.0+\n" +
                     "a=quiweyBNVNB\n" );
 
             scenario.waitForLogEntry(stream, "quiweyBNVNB");
 
             String out = stream.getCaptured();
-            assertTrue(out.contains("[OperationDescription:[de.mhus.osgi.dev.critical.micro.Hello],[{trans=local}]]"));
+            assertTrue(out.contains("[OperationDescription:[de.mhus.osgi.dev.critical.micro.Hello],[1.1.0],[{trans=local}]]"));
             assertTrue(out.contains("msg=Moin"));
             assertTrue(out.contains("version=1"));
         }
@@ -218,7 +218,7 @@ public class KarafMicroTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "operation-execute -l trans=rest de.mhus.osgi.dev.critical.micro.Hello 1.0.0\n" +
+                    "operation-execute -l trans=rest de.mhus.osgi.dev.critical.micro.Hello 1.0.0+\n" +
                     "a=quiweyBNVNB\n" );
 
             scenario.waitForLogEntry(stream, "quiweyBNVNB");
@@ -229,6 +229,7 @@ public class KarafMicroTest extends TestCase {
             assertTrue(out.contains("msg=Moin"));
             assertTrue(out.contains("version=1"));
             assertTrue(out.contains("ident=karaf1-"));
+            assertTrue(out.contains("1.1.0"));
         }
     }
     
@@ -256,7 +257,7 @@ public class KarafMicroTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "operation-execute -l trans=local de.mhus.osgi.dev.critical.micro.Hello 1.0.0\n" +
+                    "operation-execute -l trans=local de.mhus.osgi.dev.critical.micro.Hello 1.0.0+\n" +
                     "a=quiweyBNVNB\n" );
 
             scenario.waitForLogEntry(stream, "quiweyBNVNB");
@@ -273,17 +274,18 @@ public class KarafMicroTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "operation-execute -l trans=rest de.mhus.osgi.dev.critical.micro.Hello 1.0.0\n" +
+                    "operation-execute -l trans=rest de.mhus.osgi.dev.critical.micro.Hello 1.0.0+\n" +
                     "a=quiweyBNVNB\n" );
 
             scenario.waitForLogEntry(stream, "quiweyBNVNB");
 
             String out = stream.getCaptured();
-            assertTrue(out.contains("[OperationDescription:[de.mhus.osgi.dev.critical.micro.Hello],"));
+            assertTrue(out.contains("[OperationDescription:[de.mhus.osgi.dev.critical.micro.Hello],[1.1.0],"));
             assertTrue(out.contains("trans=rest"));
             assertTrue(out.contains("msg=Moin"));
             assertTrue(out.contains("version=1"));
             assertTrue(out.contains("ident=karaf1-"));
+            assertTrue(out.contains("1.1.0"));
         }
     }
     
@@ -304,6 +306,98 @@ public class KarafMicroTest extends TestCase {
             assertTrue(out.contains("_error=404"));
         }
     }
+
+    @Test
+    @Order(40)
+    public void testCreateDelete() throws NotFoundException, IOException, InterruptedException {
+        
+        // create 
+        
+        try (LogStream stream = new LogStream(scenario, "karaf1")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "sb-create de.mhus.osgi.dev.micro.AnotherOperation\n");
+
+            scenario.waitForLogEntry(stream, "Started bundle: blueprint:file:/opt/karaf/deploy/service-de.mhus.osgi.dev.micro.anotheroperation.xml");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("Created"));
+        }
+        MThread.sleep(1000); // max time for events to notify all components
+
+        try (LogStream stream = new LogStream(scenario, "karaf1")) {
+            stream.setCapture(true);
+
+            scenario.attach(stream, 
+                    "micro:operation-list -l -ta\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.micro.AnotherOperation/0.0.0"));
+
+        }
+        try (LogStream stream = new LogStream(scenario, "karaf2")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "micro:operation-list -l -ta\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.micro.AnotherOperation/0.0.0"));
+
+        }
+        
+        // delete
+        
+        try (LogStream stream = new LogStream(scenario, "karaf1")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "sb-delete de.mhus.osgi.dev.micro.AnotherOperation\n");
+
+            scenario.waitForLogEntry(stream, "Destroying container for blueprint bundle service-de.mhus.osgi.dev.micro.anotheroperation.xml");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("Deleted"));
+        }
+        MThread.sleep(1000); // max time for events to notify all components
+        
+        try (LogStream stream = new LogStream(scenario, "karaf1")) {
+            stream.setCapture(true);
+
+            scenario.attach(stream, 
+                    "micro:operation-list -l -ta\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertFalse(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.micro.AnotherOperation/0.0.0"));
+
+        }
+        try (LogStream stream = new LogStream(scenario, "karaf2")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "micro:operation-list -l -ta\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertFalse(out.contains("rest.url=http://karaf1:8181/rest/public/operation/de.mhus.osgi.dev.micro.AnotherOperation/0.0.0"));
+
+        }
+        
+        
+    }
+
     
     @BeforeAll
     public static void startDocker() throws NotFoundException, IOException, InterruptedException {
