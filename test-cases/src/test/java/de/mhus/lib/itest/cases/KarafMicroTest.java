@@ -406,23 +406,38 @@ public class KarafMicroTest extends TestCase {
 
         scenario = new DockerScenario();
         
-      scenario.add("redis", "redis:6.0.8-alpine");
+        scenario.add("jms", "webcenter/activemq:5.14.3", 
+                "env:ACTIVEMQ_CONFIG_NAME=amqp-srv1",
+                "env:ACTIVEMQ_CONFIG_DEFAULTACCOUNT=false",
+                "env:ACTIVEMQ_ADMIN_LOGIN=admin",
+                "env:ACTIVEMQ_ADMIN_PASSWORD=nein",
+                "env:ACTIVEMQ_CONFIG_MINMEMORY=1024",
+                "env:ACTIVEMQ_CONFIG_MAXMEMORY=4096",
+                "env:ACTIVEMQ_CONFIG_SCHEDULERENABLED=true"
+            );
+        
+        scenario.add("redis", "redis:6.0.8-alpine");
 
         scenario.add(new Karaf("karaf1", prop.getString("docker.mhus-apache-karaf.version"), 
                 "debug", 
-                "link:redis:redis"
+                "link:redis:redis",
+                "link:jms:jmsserver"
                 ));
         
         scenario.add(new Karaf("karaf2", prop.getString("docker.mhus-apache-karaf.version"), 
                 "debug", 
                 "link:redis:redis",
-                "link:karaf1:karaf1"
+                "link:karaf1:karaf1",
+                "link:jms:jmsserver"
                 ));
 
         scenario.destroyPrefix();
         scenario.start();
         
         MThread.sleep(1000);
+
+        // jms
+        scenario.waitForLogEntry("jms", "activemq entered RUNNING state", 0);
 
         // redis
         scenario.waitForLogEntry("redis", "Ready to accept connections", 0);
