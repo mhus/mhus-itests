@@ -308,6 +308,25 @@ public class KarafMicroTest extends TestCase {
     }
 
     @Test
+    @Order(33)
+    public void test2ExecuteViaJms() throws NotFoundException, IOException, InterruptedException {
+        try (LogStream stream = new LogStream(scenario, "karaf2")) {
+            stream.setCapture(true);
+            
+            scenario.attach(stream, 
+                    "operation-execute -l trans=jmsqueue de.mhus.osgi.dev.critical.micro.Hello 2.0.0\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("[OperationDescription:[de.mhus.osgi.dev.critical.micro.Hello],[2.0.0]"));
+            assertTrue(out.contains("queue=karaf1"));
+            assertTrue(out.contains("msg=Moin"));
+        }
+    }
+    
+    @Test
     @Order(40)
     public void testCreateDelete() throws NotFoundException, IOException, InterruptedException {
         
@@ -413,7 +432,8 @@ public class KarafMicroTest extends TestCase {
                 "env:ACTIVEMQ_ADMIN_PASSWORD=nein",
                 "env:ACTIVEMQ_CONFIG_MINMEMORY=1024",
                 "env:ACTIVEMQ_CONFIG_MAXMEMORY=4096",
-                "env:ACTIVEMQ_CONFIG_SCHEDULERENABLED=true"
+                "env:ACTIVEMQ_CONFIG_SCHEDULERENABLED=true",
+                "p:28161+:8161"
             );
         
         scenario.add("redis", "redis:6.0.8-alpine");
@@ -421,14 +441,16 @@ public class KarafMicroTest extends TestCase {
         scenario.add(new Karaf("karaf1", prop.getString("docker.mhus-apache-karaf.version"), 
                 "debug", 
                 "link:redis:redis",
-                "link:jms:jmsserver"
+                "link:jms:jmsserver",
+                "env:de_mhus_lib_jms_MJms_defaultConnection=test"
                 ));
         
         scenario.add(new Karaf("karaf2", prop.getString("docker.mhus-apache-karaf.version"), 
                 "debug", 
                 "link:redis:redis",
                 "link:karaf1:karaf1",
-                "link:jms:jmsserver"
+                "link:jms:jmsserver",
+                "env:de_mhus_lib_jms_MJms_defaultConnection=test"
                 ));
 
         scenario.destroyPrefix();
@@ -449,9 +471,10 @@ public class KarafMicroTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf1")) {
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
+                "feature:repo-add activemq 5.15.8\n" +
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
                 "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
-                "feature:install eventadmin mhu-dev mhu-micro mhu-rest\n" +
+                "feature:install eventadmin mhu-dev mhu-micro mhu-rest mhu-jms\n" +
                 "a=HGDFhjasdhj\n" );
         
             scenario.waitForLogEntry(stream, "Done.");
@@ -466,7 +489,18 @@ public class KarafMicroTest extends TestCase {
                     "bundle:install -s mvn:de.mhus.micro/micro-oper-rest/"+prop.getString("mhus-micro.version","7.0.0-SNAPSHOT")+"\n" + 
                     "bundle:install -s mvn:de.mhus.micro/micro-execute-rest/"+prop.getString("mhus-micro.version","7.0.0-SNAPSHOT")+"\n" + 
                     "bundle:install -s mvn:de.mhus.micro/micro-discover-redis/"+prop.getString("mhus-micro.version","7.0.0-SNAPSHOT")+"\n" + 
+                    "bundle:install -s mvn:de.mhus.lib.itest/examples-jms/"+prop.getString("project.version")+"\n" + 
                     "sb-create de.mhus.rest.osgi.RestServlet\n" +
+                    "a=HGDFhjasdhz\n" );
+            scenario.waitForLogEntry(stream, "HGDFhjasdhz");
+        }
+        try (LogStream stream = new LogStream(scenario, "karaf1")) {
+            stream.setFilter(new AnsiLogFilter());
+
+            scenario.attach(stream, 
+                    "dev-res -y cp examples-jms\n" +
+                    "install -s mvn:de.mhus.micro/micro-oper-jms/7.0.0-SNAPSHOT\n" +
+                    "sb-create de.mhus.micro.oper.jms.DefaultOperationsChannel\n" + 
                     "a=HGDFhjasdhz\n" );
             scenario.waitForLogEntry(stream, "HGDFhjasdhz");
         }
@@ -537,9 +571,10 @@ public class KarafMicroTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf2")) {
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
+                "feature:repo-add activemq 5.15.8\n" +
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
                 "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
-                "feature:install eventadmin mhu-dev mhu-micro\n" +
+                "feature:install eventadmin mhu-dev mhu-micro mhu-jms\n" +
                 "a=HGDFhjasdhj\n" );
         
             scenario.waitForLogEntry(stream, "Done.");
@@ -552,6 +587,16 @@ public class KarafMicroTest extends TestCase {
             scenario.attach(stream, 
                     "bundle:install -s mvn:de.mhus.micro/micro-execute-rest/"+prop.getString("mhus-micro.version","7.0.0-SNAPSHOT")+"\n" + 
                     "bundle:install -s mvn:de.mhus.micro/micro-discover-redis/"+prop.getString("mhus-micro.version","7.0.0-SNAPSHOT")+"\n" + 
+                    "bundle:install -s mvn:de.mhus.lib.itest/examples-jms/"+prop.getString("project.version")+"\n" + 
+                    "a=HGDFhjasdhz\n" );
+            scenario.waitForLogEntry(stream, "HGDFhjasdhz");
+        }
+        try (LogStream stream = new LogStream(scenario, "karaf2")) {
+            stream.setFilter(new AnsiLogFilter());
+
+            scenario.attach(stream, 
+                    "dev-res -y cp examples-jms\n" +
+                    "install -s mvn:de.mhus.micro/micro-oper-jms/7.0.0-SNAPSHOT\n" +
                     "a=HGDFhjasdhz\n" );
             scenario.waitForLogEntry(stream, "HGDFhjasdhz");
         }

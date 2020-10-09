@@ -292,7 +292,8 @@ public class KarafJmsTest extends TestCase {
           "env:ACTIVEMQ_ADMIN_PASSWORD=nein",
           "env:ACTIVEMQ_CONFIG_MINMEMORY=1024",
           "env:ACTIVEMQ_CONFIG_MAXMEMORY=4096",
-          "env:ACTIVEMQ_CONFIG_SCHEDULERENABLED=true"
+          "env:ACTIVEMQ_CONFIG_SCHEDULERENABLED=true",
+          "p:28161+:8161"
       );
 
         scenario.add(new Karaf("karaf", prop.getString("docker.mhus-apache-karaf.version"), 
