@@ -336,7 +336,7 @@ public class KarafMicroTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "sb-create de.mhus.osgi.dev.micro.AnotherOperation\n");
+                    "blue-create de.mhus.osgi.dev.micro.AnotherOperation\n");
 
             scenario.waitForLogEntry(stream, "Started bundle: blueprint:file:/opt/karaf/deploy/service-de.mhus.osgi.dev.micro.anotheroperation.xml");
 
@@ -378,7 +378,7 @@ public class KarafMicroTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "sb-delete de.mhus.osgi.dev.micro.AnotherOperation\n");
+                    "blue-delete de.mhus.osgi.dev.micro.AnotherOperation\n");
 
             scenario.waitForLogEntry(stream, "Destroying container for blueprint bundle service-de.mhus.osgi.dev.micro.anotheroperation.xml");
 
@@ -569,8 +569,8 @@ public class KarafMicroTest extends TestCase {
                     "bundle:install -s mvn:de.mhus.micro/micro-execute-rest/"+prop.getString("mhus-micro.version","7.0.0-SNAPSHOT")+"\n" + 
                     "bundle:install -s mvn:de.mhus.micro/micro-discover-redis/"+prop.getString("mhus-micro.version","7.0.0-SNAPSHOT")+"\n" + 
                     "bundle:install -s mvn:de.mhus.lib.itest/examples-jms/"+prop.getString("project.version")+"\n" + 
-                    "sb-create de.mhus.rest.osgi.RestServlet\n" +
-                    "sb-create de.mhus.rest.osgi.nodes.PublicRestNode\n" +
+                    "blue-create de.mhus.rest.osgi.RestServlet\n" +
+                    "blue-create de.mhus.rest.osgi.nodes.PublicRestNode\n" +
                     "a=HGDFhjasdhz\n" );
             scenario.waitForLogEntry(stream, "HGDFhjasdhz");
         }
@@ -580,7 +580,7 @@ public class KarafMicroTest extends TestCase {
             scenario.attach(stream, 
                     "dev-res -y cp examples-jms\n" +
                     "install -s mvn:de.mhus.micro/micro-oper-jms/7.0.0-SNAPSHOT\n" +
-                    "sb-create de.mhus.micro.oper.jms.DefaultOperationsChannel\n" + 
+                    "blue-create de.mhus.micro.oper.jms.DefaultOperationsChannel\n" + 
                     "a=HGDFhjasdhz\n" );
             scenario.waitForLogEntry(stream, "HGDFhjasdhz");
         }

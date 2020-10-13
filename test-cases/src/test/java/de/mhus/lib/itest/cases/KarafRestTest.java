@@ -444,11 +444,11 @@ public class KarafRestTest extends TestCase {
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
                     "dev-res -y cp default\n" +
-                    "sb-create de.mhus.rest.osgi.RestServlet\n" +
-                    "sb-create de.mhus.rest.osgi.RestWebSocketServlet\n" +
-                    "sb-create de.mhus.rest.osgi.nodes.PublicRestNode\n" +
-                    "sb-create de.mhus.rest.osgi.nodes.UserInformationRestNode\n" +
-                    "sb-create de.mhus.rest.osgi.nodes.JwtTokenNode\n" +
+                    "blue-create de.mhus.rest.osgi.RestServlet\n" +
+                    "blue-create de.mhus.rest.osgi.RestWebSocketServlet\n" +
+                    "blue-create de.mhus.rest.osgi.nodes.PublicRestNode\n" +
+                    "blue-create de.mhus.rest.osgi.nodes.UserInformationRestNode\n" +
+                    "blue-create de.mhus.rest.osgi.nodes.JwtTokenNode\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
