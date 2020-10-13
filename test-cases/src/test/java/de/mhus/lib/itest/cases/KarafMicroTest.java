@@ -314,7 +314,7 @@ public class KarafMicroTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "operation-execute -l trans=jmsqueue de.mhus.osgi.dev.critical.micro.Hello 2.0.0\n" +
+                    "operation-execute -l trans=jms de.mhus.osgi.dev.critical.micro.Hello 2.0.0\n" +
                     "a=quiweyBNVNB\n" );
 
             scenario.waitForLogEntry(stream, "quiweyBNVNB");
@@ -417,6 +417,85 @@ public class KarafMicroTest extends TestCase {
         
     }
 
+    @Test
+    @Order(50)
+    public void test1Bearer() throws NotFoundException, IOException, InterruptedException {
+        try (LogStream stream = new LogStream(scenario, "karaf1")) {
+            
+            // login as joe
+            stream.setCapture(true);
+            scenario.attach(stream, 
+                    "access login joe nein\n" +
+                    "a=quiweyBNVNX\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNX");
+            
+            String out = stream.getCaptured();
+            assertTrue(out.contains("OK"));
+        }
+        try (LogStream stream = new LogStream(scenario, "karaf1")) {
+            // local
+            stream.setCapture(true);
+            scenario.attach(stream, 
+                    "operation-execute -l trans=local de.mhus.osgi.dev.critical.micro.Hello 2.0.0+\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("[OperationDescription:[de.mhus.osgi.dev.critical.micro.Hello],[2.0.0],"));
+            assertTrue(out.contains("trans=local"));
+            assertTrue(out.contains("msg=Moin"));
+            assertTrue(out.contains("version=2"));
+            assertTrue(out.contains("principal=joe"));
+        }
+        try (LogStream stream = new LogStream(scenario, "karaf1")) {
+            // rest
+            stream.setCapture(true);
+            scenario.attach(stream, 
+                    "operation-execute -l trans=rest de.mhus.osgi.dev.critical.micro.Hello 2.0.0+\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("[OperationDescription:[de.mhus.osgi.dev.critical.micro.Hello],[2.0.0],"));
+            assertTrue(out.contains("trans=rest"));
+            assertTrue(out.contains("msg=Moin"));
+            assertTrue(out.contains("version=2"));
+            assertTrue(out.contains("principal=joe"));
+        }
+        try (LogStream stream = new LogStream(scenario, "karaf1")) {
+            // jms
+            stream.setCapture(true);
+            scenario.attach(stream, 
+                    "operation-execute -l trans=jms de.mhus.osgi.dev.critical.micro.Hello 2.0.0+\n" +
+                    "a=quiweyBNVNB\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNB");
+
+            String out = stream.getCaptured();
+            assertTrue(out.contains("[OperationDescription:[de.mhus.osgi.dev.critical.micro.Hello],[2.0.0],"));
+            assertTrue(out.contains("trans=jms"));
+            assertTrue(out.contains("msg=Moin"));
+            assertTrue(out.contains("version=2"));
+            assertTrue(out.contains("principal=joe"));
+        }
+        try (LogStream stream = new LogStream(scenario, "karaf1")) {
+
+            // logout
+            stream.setCapture(true);
+            scenario.attach(stream, 
+                    "access logout\n" +
+                    "a=quiweyBNVNX\n" );
+
+            scenario.waitForLogEntry(stream, "quiweyBNVNX");
+            
+            String out = stream.getCaptured();
+            assertTrue(out.contains("OK"));
+            
+        }
+    }
     
     @BeforeAll
     public static void startDocker() throws NotFoundException, IOException, InterruptedException {
@@ -491,6 +570,7 @@ public class KarafMicroTest extends TestCase {
                     "bundle:install -s mvn:de.mhus.micro/micro-discover-redis/"+prop.getString("mhus-micro.version","7.0.0-SNAPSHOT")+"\n" + 
                     "bundle:install -s mvn:de.mhus.lib.itest/examples-jms/"+prop.getString("project.version")+"\n" + 
                     "sb-create de.mhus.rest.osgi.RestServlet\n" +
+                    "sb-create de.mhus.rest.osgi.nodes.PublicRestNode\n" +
                     "a=HGDFhjasdhz\n" );
             scenario.waitForLogEntry(stream, "HGDFhjasdhz");
         }
@@ -549,10 +629,11 @@ public class KarafMicroTest extends TestCase {
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
             MThread.sleep(5000); // a long time - wait for configuration manager
 
+            @SuppressWarnings("unused")
             String out = stream.getCaptured();
 
 //            assertTrue(out.contains("[doConfigure]"));
-            assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
+//            assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
         }
         
         try (LogStream stream = new LogStream(scenario, "karaf1")) {
