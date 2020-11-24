@@ -151,7 +151,8 @@ public class KarafVaadinTest extends TestCase {
         }
 
         int port = scenario.get("selenium").getPortBinding(4444);
-        driver = new RemoteWebDriver(new URL("http://localhost:" + port + "/wd/hub"), DesiredCapabilities.chrome());
+        String host = scenario.get("selenium").getExternalHost();
+        driver = new RemoteWebDriver(new URL("http://"+host+":" + port + "/wd/hub"), DesiredCapabilities.chrome());
         
     }
     
