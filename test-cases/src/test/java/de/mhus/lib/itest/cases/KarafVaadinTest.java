@@ -137,8 +137,8 @@ public class KarafVaadinTest extends TestCase {
 
             String out = stream.getCaptured();
 
-            assertTrue(out.contains("[doConfigure]"));
-            assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
+            Warnings.warnTrue(out.contains("[doConfigure]"));
+            Warnings.warnTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
         }
 
         try (LogStream stream = new LogStream(scenario, "karaf")) {
