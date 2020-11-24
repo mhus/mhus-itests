@@ -51,7 +51,7 @@ public class ReactiveMultiTest extends TestCase {
                 scenario.waitForLogEntry(stream, "quiweyBNVNB");
     
                 String out = stream.getCaptured();
-                assertTrue(out.contains("de.mhus.cherry.reactive.examples.simple1.S1Process:0.0.1"));
+                assertTrue(out.contains("de.mhus.app.reactive.examples.simple1.S1Process:0.0.1"));
                 assertTrue(out.contains("enabled"));
             }
         }
@@ -63,11 +63,11 @@ public class ReactiveMultiTest extends TestCase {
         // start stress
         
         String stress = "pstress -i 0 -m " + (AMOUNT * 100) + " \\\n" + 
-                "'bpm://de.mhus.cherry.reactive.examples.simple1.S1Process:0.0.1/de.mhus.cherry.reactive.examples.simple1.S1Pool;customId=$cnt$;customerId=alf?text1=second' \\\n" + 
-                "'bpm://de.mhus.cherry.reactive.examples.simple1.S1Process:0.0.1/de.mhus.cherry.reactive.examples.simple1.S1Pool;customId=$cnt$;customerId=alf?text1=third' \\\n" + 
-                "'bpm://de.mhus.cherry.reactive.examples.simple1.S1Process:0.0.1/de.mhus.cherry.reactive.examples.simple1.S1Pool;customId=$cnt$;customerId=alf?text1=error1' \\\n" + 
-                "'bpm://de.mhus.cherry.reactive.examples.simple1.S1Process:0.0.1/de.mhus.cherry.reactive.examples.simple1.S1Pool;customId=$cnt$;customerId=alf?text1=parallel1' \\\n" + 
-                "'bpm://de.mhus.cherry.reactive.examples.simple1.S1Process:0.0.1/de.mhus.cherry.reactive.examples.simple1.S1Pool;customId=$cnt$;customerId=alf?text1=parallel2'\n" + 
+                "'bpm://de.mhus.app.reactive.examples.simple1.S1Process:0.0.1/de.mhus.app.reactive.examples.simple1.S1Pool;customId=$cnt$;customerId=alf?text1=second' \\\n" + 
+                "'bpm://de.mhus.app.reactive.examples.simple1.S1Process:0.0.1/de.mhus.app.reactive.examples.simple1.S1Pool;customId=$cnt$;customerId=alf?text1=third' \\\n" + 
+                "'bpm://de.mhus.app.reactive.examples.simple1.S1Process:0.0.1/de.mhus.app.reactive.examples.simple1.S1Pool;customId=$cnt$;customerId=alf?text1=error1' \\\n" + 
+                "'bpm://de.mhus.app.reactive.examples.simple1.S1Process:0.0.1/de.mhus.app.reactive.examples.simple1.S1Pool;customId=$cnt$;customerId=alf?text1=parallel1' \\\n" + 
+                "'bpm://de.mhus.app.reactive.examples.simple1.S1Process:0.0.1/de.mhus.app.reactive.examples.simple1.S1Pool;customId=$cnt$;customerId=alf?text1=parallel2'\n" + 
                 "";
         try (LogStream stream = scenario.exec("karaf0", new String[] {"/opt/karaf/bin/client"},null,false,null,null,stress)) {
             scenario.waitForLogEntry(stream, ">>> 10001:");
@@ -266,8 +266,8 @@ public class ReactiveMultiTest extends TestCase {
                 "feature:repo-add activemq 5.15.8\n" +
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
                 "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
-                "feature:repo-add mvn:de.mhus.cherry.reactive/reactive-feature/"+prop.getString("cherry-reactive.version")+"/xml/features\n" +
-                "feature:install mhu-dev cherry-reactive-all cherry-reactive-dev\n" +
+                "feature:repo-add mvn:de.mhus.app.reactive/reactive-feature/"+prop.getString("mhus-reactive.version")+"/xml/features\n" +
+                "feature:install mhu-dev mhus-reactive-all mhus-reactive-dev\n" +
                 "a=HGDFhjasdhj\n" );
         
             scenario.waitForLogEntry(stream, "Done.");
@@ -391,14 +391,14 @@ public class ReactiveMultiTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "pdeploy de.mhus.cherry.reactive.examples.simple1.S1Process:0.0.1\n" +
+                    "pdeploy de.mhus.app.reactive.examples.simple1.S1Process:0.0.1\n" +
                     "a=quiweyBNVNB\n" );
 
             scenario.waitForLogEntry(stream, "quiweyBNVNB");
 
             String out = stream.getCaptured();
-            assertTrue(out.contains("[de.mhus.cherry.reactive.examples.simple1.S1Pool]"));
-            assertTrue(out.contains("[de.mhus.cherry.reactive.examples.simple1.S1Pool2]"));
+            assertTrue(out.contains("[de.mhus.app.reactive.examples.simple1.S1Pool]"));
+            assertTrue(out.contains("[de.mhus.app.reactive.examples.simple1.S1Pool2]"));
         }        
     }
     
