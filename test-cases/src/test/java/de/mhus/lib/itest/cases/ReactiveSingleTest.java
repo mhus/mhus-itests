@@ -22,6 +22,7 @@ import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.tests.TestCase;
+import de.mhus.lib.tests.Warnings;
 import de.mhus.lib.tests.docker.AnsiLogFilter;
 import de.mhus.lib.tests.docker.DockerContainer;
 import de.mhus.lib.tests.docker.DockerScenario;
@@ -265,6 +266,7 @@ public class ReactiveSingleTest extends TestCase {
             scenario.attach(stream, 
                     "dev-res -y cp default\n" +
                     "dev-res -y cp examples-reactive-single\n" +
+                    "dev-res -y cp disable-debug-log\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
@@ -273,7 +275,7 @@ public class ReactiveSingleTest extends TestCase {
             String out = stream.getCaptured();
 
 //            assertTrue(out.contains("[doConfigure]"));
-            assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
+            Warnings.warnTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
         }
         
         try (LogStream stream = new LogStream(scenario, "karaf")) {
