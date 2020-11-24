@@ -11,11 +11,13 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MValidator;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.tests.TestCase;
+import static de.mhus.lib.tests.Warnings.warnTrue;
 import de.mhus.lib.tests.docker.AnsiLogFilter;
 import de.mhus.lib.tests.docker.DockerScenario;
 import de.mhus.lib.tests.docker.LogStream;
@@ -271,10 +273,12 @@ public abstract class KarafAdbAbstract extends TestCase {
     @Test
     @Order(20)
     public void testBenchmark() throws NotFoundException, IOException, InterruptedException {
+        int amount = MCast.toint(System.getenv("ADB_BENCHMARK_AMOUNT"), 1000);
+        int loops = MCast.toint(System.getenv("ADB_BENCHMARK_LOOPS"), 100);
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
-                            "itest:adbbenchmark 10000 1000\n" +
+                            "itest:adbbenchmark "+amount+" "+loops+"\n" +
                     "a=quiweyBNVNB\n" );
 
             scenario.waitForLogEntry(stream, "quiweyBNVNB");
@@ -338,8 +342,8 @@ public abstract class KarafAdbAbstract extends TestCase {
 
             String out = stream.getCaptured();
 
-//            assertTrue(out.contains("[doConfigure]"));
-//            assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
+            warnTrue(out.contains("[doConfigure]"));
+            warnTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
         }
         
         try (LogStream stream = new LogStream(scenario, "karaf")) {
