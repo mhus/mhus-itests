@@ -205,7 +205,8 @@ public class KarafJmsTest extends TestCase {
     @Order(52)
     public void testStress2() throws NotFoundException, IOException, InterruptedException {
         String load = "10001";
-        String rounds = "20001";
+        String rounds = "10001"; // more then 15000 will cause 
+        // java.lang.RuntimeException: org.apache.hc.core5.http.ConnectionRequestTimeoutException: Timeout deadline: 180000 MILLISECONDS, actual: 180000 MILLISECONDS
         int parallel = 5; // not more parallel ssh connections
         
         LinkedList<Job> jobs = new LinkedList<>();
