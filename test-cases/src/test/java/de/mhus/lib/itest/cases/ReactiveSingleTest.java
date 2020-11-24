@@ -192,7 +192,7 @@ public class ReactiveSingleTest extends TestCase {
                 "feature:repo-add activemq 5.15.8\n" +
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
                 "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
-                "feature:repo-add mvn:de.mhus.cherry.reactive/reactive-feature/"+prop.getString("cherry-reactive.version")+"/xml/features\n" +
+                "feature:repo-add mvn:de.mhus.cherry.reactive/reactive-feature/"+prop.getString("mhus-reactive.version")+"/xml/features\n" +
                 "feature:install mhu-dev cherry-reactive-all cherry-reactive-dev\n" +
                 "a=HGDFhjasdhj\n" );
         
