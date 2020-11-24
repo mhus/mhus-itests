@@ -159,7 +159,7 @@ public abstract class KarafAdbAbstract extends TestCase {
     protected int getFirstNumber(String[] strings, int def) {
         for (String str : strings) {
             try {
-                int nr = Integer.valueOf(str);
+                int nr = Integer.valueOf(str.trim());
                 return nr;
             } catch(NumberFormatException nfe) {}
         }
