@@ -119,7 +119,7 @@ public class KarafTransformTest extends TestCase {
             assertTrue(out.contains("karaf-dev"));
             
             assertTrue(out.contains("transform-api"));
-            assertTrue(out.contains("transform-birt"));
+//            assertTrue(out.contains("transform-birt"));
             assertTrue(out.contains("transform-core"));
             assertTrue(out.contains("transform-freemarker"));
             assertTrue(out.contains("transform-jtwig"));
