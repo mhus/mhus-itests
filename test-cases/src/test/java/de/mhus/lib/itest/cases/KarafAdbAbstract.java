@@ -283,8 +283,8 @@ public abstract class KarafAdbAbstract extends TestCase {
     @Test
     @Order(20)
     public void testBenchmark() throws NotFoundException, IOException, InterruptedException {
-        int amount = MCast.toint(System.getenv("ADB_BENCHMARK_AMOUNT"), 1000);
-        int loops = MCast.toint(System.getenv("ADB_BENCHMARK_LOOPS"), 100);
+        int amount = MCast.toint(System.getenv("ADB_BENCHMARK_AMOUNT"), 10000);
+        int loops = MCast.toint(System.getenv("ADB_BENCHMARK_LOOPS"), 1000);
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
