@@ -272,7 +272,6 @@ public abstract class KarafAdbAbstract extends TestCase {
     @Order(20)
     public void testBenchmark() throws NotFoundException, IOException, InterruptedException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
-            stream.setCapture(true);
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
                             "itest:adbbenchmark 10000 1000\n" +
