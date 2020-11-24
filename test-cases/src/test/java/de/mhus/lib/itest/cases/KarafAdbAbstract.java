@@ -340,7 +340,7 @@ public abstract class KarafAdbAbstract extends TestCase {
             String out = stream.getCaptured();
 
 //            assertTrue(out.contains("[doConfigure]"));
-            assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
+//            assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
         }
         
         try (LogStream stream = new LogStream(scenario, "karaf")) {
