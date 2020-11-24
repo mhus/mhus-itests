@@ -718,6 +718,7 @@ public class KarafMicroTest extends TestCase {
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
                     "dev-res -y cp default\n" +
+                    "dev-res -y cp disable-debug-log\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
