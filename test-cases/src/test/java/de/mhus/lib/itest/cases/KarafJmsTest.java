@@ -371,6 +371,7 @@ public class KarafJmsTest extends TestCase {
             scenario.attach(stream, 
                     "dev-res -y cp default\n" +
                     "dev-res -y cp examples-jms\n" +
+                    "dev-res -y cp disable-debug-log\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
