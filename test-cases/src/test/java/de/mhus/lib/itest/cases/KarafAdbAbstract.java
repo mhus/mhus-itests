@@ -128,9 +128,9 @@ public abstract class KarafAdbAbstract extends TestCase {
             System.out.println(out);
             System.out.println("------");
             
-            String count = out.split("\n")[1].trim();
+            int count = getFirstNumber(out.split("\n"), -1);
             System.out.println(count);
-            assertEquals("6", count);
+            assertEquals(6, count);
         }
         // delete
         cleanupEntities();
@@ -150,12 +150,22 @@ public abstract class KarafAdbAbstract extends TestCase {
             System.out.println(out);
             System.out.println("------");
             
-            String count = out.split("\n")[1].trim();
+            int count = getFirstNumber(out.split("\n"), -1);
             System.out.println(count);
-            assertEquals("0", count);
+            assertEquals(0, count);
         }
     }
     
+    protected int getFirstNumber(String[] strings, int def) {
+        for (String str : strings) {
+            try {
+                int nr = Integer.valueOf(str);
+                return nr;
+            } catch(NumberFormatException nfe) {}
+        }
+        return def;
+    }
+
     protected void cleanupEntities() throws NotFoundException, IOException, InterruptedException {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
@@ -335,6 +345,7 @@ public abstract class KarafAdbAbstract extends TestCase {
             scenario.attach(stream, 
                     "dev-res -y cp default\n" +
                     "dev-res -y cp examples-adb-"+kind+"\n" +
+                    "dev-res -y cp disable-debug-log\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
