@@ -310,6 +310,7 @@ public class ReactiveMultiTest extends TestCase {
                 assertTrue(pos2 > 0);
                 out = out.substring(pos1, pos2);
                 
+                assertFalse(out.contains("Resolved"));
                 assertTrue(out.contains("lib-annotations"));
                 assertTrue(out.contains("lib-core"));
                 assertTrue(out.contains("lib-j2ee"));
