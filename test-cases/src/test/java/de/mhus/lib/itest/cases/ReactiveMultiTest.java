@@ -18,6 +18,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import com.github.dockerjava.api.exception.DockerException;
 
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MThread;
@@ -32,8 +33,8 @@ import de.mhus.lib.tests.docker.LogStream;
 @TestMethodOrder(OrderAnnotation.class)
 public class ReactiveMultiTest extends TestCase {
 
-    private static final int AMOUNT = 1; // number of parallel instances
-    private static final int STRESS_ROUNDS = 10; // every round ca. 1 minute
+    private static final int AMOUNT = MCast.toint(System.getenv("REACTIVE_MULTI_AMOUNT"), 4); // number of parallel instances
+    private static final int STRESS_ROUNDS = MCast.toint(System.getenv("REACTIVE_MULTI_ROUNDS"), 10); // every round ca. 1 minute
     private static DockerScenario scenario;
     private static MProperties prop;
 
