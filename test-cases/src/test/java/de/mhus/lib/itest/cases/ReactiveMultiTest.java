@@ -34,7 +34,7 @@ import de.mhus.lib.tests.docker.LogStream;
 @TestMethodOrder(OrderAnnotation.class)
 public class ReactiveMultiTest extends TestCase {
 
-    private static final int AMOUNT = MCast.toint(System.getenv("REACTIVE_MULTI_AMOUNT"), 4); // number of parallel instances
+    private static final int AMOUNT = MCast.toint(System.getenv("REACTIVE_MULTI_AMOUNT"), 2); // number of parallel instances
     private static final int STRESS_ROUNDS = MCast.toint(System.getenv("REACTIVE_MULTI_ROUNDS"), 10); // every round ca. 1 minute
     private static DockerScenario scenario;
     private static MProperties prop;
