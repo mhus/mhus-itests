@@ -21,6 +21,7 @@ import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.tests.TestCase;
@@ -74,10 +75,12 @@ public class ReactiveMultiTest extends TestCase {
             scenario.waitForLogEntry(stream, ">>> 10001:");
         }
 
+        MStopWatch timerAll = new MStopWatch("all").start();
         int maxId = 9999;
         for (int i = 0; i < STRESS_ROUNDS; i++) {
             MThread.sleep(MPeriod.MINUTE_IN_MILLISECOUNDS);
             int lastMax = maxId;
+            MStopWatch timerRound = new MStopWatch("round").start();
             try (LogStream stream = new LogStream(scenario, "karaf0")) {
                 stream.setCapture(true);
                 scenario.exec(stream, new String[] {"/opt/karaf/bin/client"},null,false,null,null,"pcase -ta list\na=JKHIUY\na=${a}675GH\n");
@@ -97,9 +100,11 @@ public class ReactiveMultiTest extends TestCase {
             
             System.out.println();
             System.out.println("--------------------------");
-            System.out.println(" Round  : " + i);
-            System.out.println(" MaxId  : " + maxId);
-            System.out.println(" Created: " + (maxId-lastMax) );
+            System.out.println(" Round   : " + i);
+            System.out.println(" MaxId   : " + maxId);
+            System.out.println(" Created : " + (maxId-lastMax) );
+            System.out.println(" Duration: " + timerRound);
+            System.out.println(" Duration: " + timerAll);
             System.out.println("--------------------------");
         }
         
