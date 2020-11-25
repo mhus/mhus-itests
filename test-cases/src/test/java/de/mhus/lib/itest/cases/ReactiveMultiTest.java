@@ -32,7 +32,7 @@ import de.mhus.lib.tests.docker.LogStream;
 @TestMethodOrder(OrderAnnotation.class)
 public class ReactiveMultiTest extends TestCase {
 
-    private static final int AMOUNT = 4; // number of parallel instances
+    private static final int AMOUNT = 1; // number of parallel instances
     private static final int STRESS_ROUNDS = 10; // every round ca. 1 minute
     private static DockerScenario scenario;
     private static MProperties prop;
@@ -257,7 +257,7 @@ public class ReactiveMultiTest extends TestCase {
         
     }
     
-    private static void prepreKaraf(int a) throws Exception {
+    private static void prepreKaraf(final int a) throws Exception {
         scenario.waitForLogEntry("karaf"+a, "@karaf"+a+"()>", 0);
         
         try (LogStream stream = new LogStream(scenario, "karaf"+a)) {
@@ -286,54 +286,67 @@ public class ReactiveMultiTest extends TestCase {
         MThread.sleep(10000);
 //        scenario.waitForLogEntry("karaf"+a, "Done.", 1);
         
-        try (LogStream stream = new LogStream(scenario, "karaf"+a)) {
-            stream.setFilter(new AnsiLogFilter());
-            stream.setCapture(true);
-            scenario.attach(stream, 
-                    "list\n" +
-                    "a=JKHIUY\na=${a}675GH\n" );
-            scenario.waitForLogEntry(stream, "JKHIUY675GH");
-            
-            String out = stream.getCaptured();
-            
-            int pos1 = out.indexOf("List Threshold");
-            assertTrue(pos1 > 0);
-            int pos2 = out.indexOf("@karaf"+a+"()", pos1);
-            assertTrue(pos2 > 0);
-            out = out.substring(pos1, pos2);
-            
-            assertTrue(out.contains("lib-annotations"));
-            assertTrue(out.contains("lib-core"));
-            assertTrue(out.contains("lib-j2ee"));
-            assertTrue(out.contains("karaf-commands"));
-            assertTrue(out.contains("osgi-api"));
-            assertTrue(out.contains("osgi-services"));
-            assertTrue(out.contains("karaf-dev"));
-            
-            assertTrue(out.contains("db-core"));
-            assertTrue(out.contains("db-karaf"));
-            assertTrue(out.contains("db-osgi-api"));
-            assertTrue(out.contains("db-osgi-adb"));
-
-            assertTrue(out.contains("rest-core"));
-            assertTrue(out.contains("rest-osgi"));
-            assertTrue(out.contains("rest-karaf"));
-            
-            assertTrue(out.contains("vaadin-core"));
-            assertTrue(out.contains("vaadin-osgi-desktop"));
-            assertTrue(out.contains("vaadin-osgi-theme"));
-            assertTrue(out.contains("vaadin-osgi-bridge"));
-            assertTrue(out.contains("vaadin-karaf-bridge"));
-            assertTrue(out.contains("vaadin-timerextension"));
-            
-            assertTrue(out.contains("reactive-osgi"));
-            assertTrue(out.contains("reactive-rest"));
-            assertTrue(out.contains("reactive-karaf"));
-            assertTrue(out.contains("reactive-vaadin-core"));
-            assertTrue(out.contains("reactive-vaadin-widgets"));
-            
-            assertTrue(out.contains("examples-reactive"));
+        int tryCnt = 0;
+        while (true) {
+            try (LogStream stream = new LogStream(scenario, "karaf"+a)) {
+                stream.setFilter(new AnsiLogFilter());
+                stream.setCapture(true);
+                scenario.attach(stream, 
+                        "list\n" +
+                        "a=JKHIUY\na=${a}675GH\n" );
+                scenario.waitForLogEntry(stream, "JKHIUY675GH");
+                
+                String out = stream.getCaptured();
+                
+                int pos1 = out.indexOf("List Threshold");
+                assertTrue(pos1 > 0);
+                int pos2 = out.indexOf("@karaf"+a+"()", pos1);
+                assertTrue(pos2 > 0);
+                out = out.substring(pos1, pos2);
+                
+                assertTrue(out.contains("lib-annotations"));
+                assertTrue(out.contains("lib-core"));
+                assertTrue(out.contains("lib-j2ee"));
+                assertTrue(out.contains("karaf-commands"));
+                assertTrue(out.contains("osgi-api"));
+                assertTrue(out.contains("osgi-services"));
+                assertTrue(out.contains("karaf-dev"));
+                
+                assertTrue(out.contains("db-core"));
+                assertTrue(out.contains("db-karaf"));
+                assertTrue(out.contains("db-osgi-api"));
+                assertTrue(out.contains("db-osgi-adb"));
+    
+                assertTrue(out.contains("rest-core"));
+                assertTrue(out.contains("rest-osgi"));
+                assertTrue(out.contains("rest-karaf"));
+                
+                assertTrue(out.contains("vaadin-core"));
+                assertTrue(out.contains("vaadin-osgi-desktop"));
+                assertTrue(out.contains("vaadin-osgi-theme"));
+                assertTrue(out.contains("vaadin-osgi-bridge"));
+                assertTrue(out.contains("vaadin-karaf-bridge"));
+                assertTrue(out.contains("vaadin-timerextension"));
+                
+                assertTrue(out.contains("reactive-osgi"));
+                assertTrue(out.contains("reactive-rest"));
+                assertTrue(out.contains("reactive-karaf"));
+                assertTrue(out.contains("reactive-vaadin-core"));
+                assertTrue(out.contains("reactive-vaadin-widgets"));
+                
+                assertTrue(out.contains("examples-reactive"));
+            }  catch (Throwable t) {
+                if (tryCnt > 12)
+                    throw t;
+                MThread.sleep(10000);
+                tryCnt++;
+                System.out.println();
+                System.out.println("=== "+a+" Wait for deployment " + tryCnt);
+                continue;
+            }
+            break;
         }
+        MThread.sleep(10000);
         
         try (LogStream stream = new LogStream(scenario, "karaf"+a)) {
             stream.setCapture(true);
