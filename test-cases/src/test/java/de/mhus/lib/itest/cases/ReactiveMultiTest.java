@@ -83,7 +83,7 @@ public class ReactiveMultiTest extends TestCase {
             MStopWatch timerRound = new MStopWatch("round").start();
             try (LogStream stream = new LogStream(scenario, "karaf0")) {
                 stream.setCapture(true);
-                scenario.exec(stream, new String[] {"/opt/karaf/bin/client"},null,false,null,null,"pcase -ta list\na=JKHIUY\na=${a}675GH\n");
+                scenario.exec(stream, new String[] {"/opt/karaf/bin/client"},null,false,null,null,"pcase-list -ta\na=JKHIUY\na=${a}675GH\n");
                 scenario.waitForLogEntry(stream, "JKHIUY675GH");
                 
                 String out = stream.getCaptured();
@@ -120,7 +120,7 @@ public class ReactiveMultiTest extends TestCase {
             MThread.sleep(MPeriod.MINUTE_IN_MILLISECOUNDS);
             try (LogStream stream = new LogStream(scenario, "karaf0")) {
                 stream.setCapture(true);
-                scenario.exec(stream, new String[] {"/opt/karaf/bin/client"},null,false,null,null,"pcase -ta list\na=JKHIUY\na=${a}675GH\n");
+                scenario.exec(stream, new String[] {"/opt/karaf/bin/client"},null,false,null,null,"pcase-list -ta\na=JKHIUY\na=${a}675GH\n");
                 scenario.waitForLogEntry(stream, "JKHIUY675GH");
                 
                 String out = stream.getCaptured();
@@ -391,7 +391,7 @@ public class ReactiveMultiTest extends TestCase {
                 stream.setCapture(true);
                 
                 scenario.attach(stream, 
-                        "pengine status\n" +
+                        "pengine-status\n" +
                         "a=quiweyBNVNB\n" );
     
                 scenario.waitForLogEntry(stream, "quiweyBNVNB");

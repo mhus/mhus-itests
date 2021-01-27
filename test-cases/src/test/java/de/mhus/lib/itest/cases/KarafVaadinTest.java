@@ -143,7 +143,7 @@ public class KarafVaadinTest extends TestCase {
 
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             scenario.attach(stream, 
-                    "access restart\n" +
+                    "access-restart\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVU\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVU");

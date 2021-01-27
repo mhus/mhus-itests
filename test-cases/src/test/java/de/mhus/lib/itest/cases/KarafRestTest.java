@@ -463,8 +463,8 @@ public class KarafRestTest extends TestCase {
         
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             scenario.attach(stream, 
-                    "mhus:log reloadconfig\n" +
-                    "mhus:access restart\n" +
+                    "mhus:log-set reloadconfig\n" +
+                    "mhus:access-restart\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVU\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVU");

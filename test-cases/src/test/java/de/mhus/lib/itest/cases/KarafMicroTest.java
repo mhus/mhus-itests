@@ -427,7 +427,7 @@ public class KarafMicroTest extends TestCase {
             // login as joe
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "access login joe nein\n" +
+                    "access-login joe nein\n" +
                     "a=quiweyBNVNX\n" );
 
             scenario.waitForLogEntry(stream, "quiweyBNVNX");
@@ -488,7 +488,7 @@ public class KarafMicroTest extends TestCase {
             // logout
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "access logout\n" +
+                    "access-logout\n" +
                     "a=quiweyBNVNX\n" );
 
             scenario.waitForLogEntry(stream, "quiweyBNVNX");
@@ -640,7 +640,7 @@ public class KarafMicroTest extends TestCase {
         
         try (LogStream stream = new LogStream(scenario, "karaf1")) {
             scenario.attach(stream, 
-                    "access restart\n" +
+                    "access-restart\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVU\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVU");
@@ -734,7 +734,7 @@ public class KarafMicroTest extends TestCase {
         
         try (LogStream stream = new LogStream(scenario, "karaf2")) {
             scenario.attach(stream, 
-                    "access restart\n" +
+                    "access-restart\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVU\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVU");

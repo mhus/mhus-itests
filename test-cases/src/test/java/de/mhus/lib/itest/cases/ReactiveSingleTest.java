@@ -81,7 +81,7 @@ public class ReactiveSingleTest extends TestCase {
                 stream.setCapture(true);
                 
                 scenario.attach(stream, 
-                        "pcase -a -ta list\n" +
+                        "pcase-list -a -ta\n" +
                         "a=quiweyBNVNB\n" );
     
                 scenario.waitForLogEntry(stream, "quiweyBNVNB");
@@ -102,7 +102,7 @@ public class ReactiveSingleTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "pengine archive\n" +
+                    "pengine-tool archive\n" +
                     "a=quiweyBNVNB\n" );
 
             scenario.waitForLogEntry(stream, "quiweyBNVNB");
@@ -208,8 +208,8 @@ public class ReactiveSingleTest extends TestCase {
                     "a=HGDFhjasdhz\n" );
             scenario.waitForLogEntry(stream, "HGDFhjasdhz");
         }
-        
-        scenario.waitForLogEntry("karaf", "Done.", 1);
+        MThread.sleep(10000);
+//        scenario.waitForLogEntry("karaf", "Done.", 1);
         
         int tryCnt = 0;
         while (true) {
@@ -294,7 +294,7 @@ public class ReactiveSingleTest extends TestCase {
         
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             scenario.attach(stream, 
-                    "access restart\n" +
+                    "access-restart\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVU\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVU");
@@ -314,7 +314,7 @@ public class ReactiveSingleTest extends TestCase {
                 stream.setCapture(true);
                 
                 scenario.attach(stream, 
-                        "pengine status\n" +
+                        "pengine-status\n" +
                         "a=quiweyBNVNB\n" );
     
                 scenario.waitForLogEntry(stream, "quiweyBNVNB");

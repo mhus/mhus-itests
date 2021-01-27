@@ -35,7 +35,7 @@ public class KarafToolsTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "access id\n" +
+                    "access-id\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -49,8 +49,8 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "access admin\n" +
-                    "access id\n" +
+                    "access-admin\n" +
+                    "access-id\n" +
                     "a=JKHHJKkjhkjhHJKHJ\n" );
 
             scenario.waitForLogEntry(stream, "JKHHJKkjhkjhHJKHJ");
@@ -68,7 +68,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "timer -ta list\n" +
+                    "timer-list -ta\n" +
                     "a=quiweyBNVNB\n" );
 
             scenario.waitForLogEntry(stream, "quiweyBNVNB");
@@ -86,7 +86,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "cache list\n" +
+                    "cache-list\n" +
                     "a=poiVCXkljERT\n" );
 
             scenario.waitForLogEntry(stream, "poiVCXkljERT");
@@ -105,7 +105,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "simpleservice -ta list\n" +
+                    "simpleservice-list -ta\n" +
                     "a=ERERRYhjhgfj\n" );
 
             scenario.waitForLogEntry(stream, "ERERRYhjhgfj");
@@ -236,7 +236,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "mhus:config dump\n" +
+                    "mhus:config-dump\n" +
                     "a=mbnB100NVyiuGHF\n" );
 
             scenario.waitForLogEntry(stream, "mbnB100NVyiuGHF");
@@ -292,7 +292,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "keychain list\n" +
+                    "keychain-list\n" +
                     "a=mbnB163NVyiuGHF\n" );
 
             scenario.waitForLogEntry(stream, "mbnB163NVyiuGHF");
@@ -305,7 +305,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "keychain add test Test TDesc "+secret+"\n" +
+                    "keychain-add -t test -n Test -d TDesc "+secret+"\n" +
                     "a=mbnB163ANVyiuGHF\n" );
 
             scenario.waitForLogEntry(stream, "mbnB163ANVyiuGHF");
@@ -320,7 +320,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "keychain list\n" +
+                    "keychain-list\n" +
                     "a=mbnB163BNVyiuGHF\n" );
 
             scenario.waitForLogEntry(stream, "mbnB163BNVyiuGHF");
@@ -333,7 +333,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "keychain get "+id+"\n" +
+                    "keychain-get "+id+"\n" +
                     "a=mbnB163CNVyiuGHF\n" );
 
             scenario.waitForLogEntry(stream, "mbnB163CNVyiuGHF");
@@ -348,7 +348,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "keychain save\n" +
+                    "keychain-save\n" +
                     "a=mbnB163ENVyiuGHF\n" );
             
             scenario.waitForLogEntry(stream, "mbnB163ENVyiuGHF");
@@ -360,7 +360,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "keychain remove "+id+"\n" +
+                    "keychain-remove "+id+"\n" +
                     "a=mbnB163DNVyiuGHF\n" );
 
             scenario.waitForLogEntry(stream, "mbnB163DNVyiuGHF");
@@ -372,7 +372,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "keychain list\n" +
+                    "keychain-list\n" +
                     "a=mbnB163FNVyiuGHF\n" );
 
             scenario.waitForLogEntry(stream, "mbnB163FNVyiuGHF");
@@ -385,7 +385,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "keychain load\n" +
+                    "keychain-load\n" +
                     "a=mbnB163GNVyiuGHF\n" );
             
             scenario.waitForLogEntry(stream, "mbnB163GNVyiuGHF");
@@ -397,7 +397,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "keychain list\n" +
+                    "keychain-list\n" +
                     "a=mbnB163HNVyiuGHF\n" );
 
             scenario.waitForLogEntry(stream, "mbnB163HNVyiuGHF");
@@ -415,7 +415,7 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "lock -ta list\n" +
+                    "lock-list -ta\n" +
                     "a=mbnB64NVyiuGHF\n" );
 
             scenario.waitForLogEntry(stream, "mbnB64NVyiuGHF");
@@ -495,7 +495,7 @@ public class KarafToolsTest extends TestCase {
 
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             scenario.attach(stream, 
-                    "access restart\n" +
+                    "access-restart\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVU\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVU");

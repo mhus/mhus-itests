@@ -34,7 +34,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher x list\n" +
+                    "crypt:cipher-list\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -55,7 +55,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:signer x list\n" +
+                    "crypt:signer-list\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -74,7 +74,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher -p secret RSA-BC-01 test length=512\n" +
+                    "crypt:cipher-test -p secret RSA-BC-01 length=512\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -91,7 +91,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher -p secret RSA-BC-01 test length=1024\n" +
+                    "crypt:cipher-test -p secret RSA-BC-01 length=1024\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -108,7 +108,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher -p secret RSA-BC-01 test length=2048\n" +
+                    "crypt:cipher-test -p secret RSA-BC-01 length=2048\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -125,7 +125,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher -p secret RSA-BC-01 test length=4096\n" +
+                    "crypt:cipher-test -p secret RSA-BC-01 length=4096\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -142,7 +142,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher -p secret RSA-BC-01 test length=8192\n" +
+                    "crypt:cipher-test -p secret RSA-BC-01 length=8192\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -160,7 +160,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher -p secret RSA-JCE-01 test length=512\n" +
+                    "crypt:cipher-test -p secret RSA-JCE-01 length=512\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -177,7 +177,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher -p secret RSA-JCE-01 test length=1024\n" +
+                    "crypt:cipher-test -p secret RSA-JCE-01 length=1024\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -194,7 +194,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher -p secret RSA-JCE-01 test length=2048\n" +
+                    "crypt:cipher-test -p secret RSA-JCE-01 length=2048\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -211,7 +211,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher -p secret RSA-JCE-01 test length=4096\n" +
+                    "crypt:cipher-test -p secret RSA-JCE-01 length=4096\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -228,7 +228,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher -p secret RSA-JCE-01 test length=8192\n" +
+                    "crypt:cipher-test -p secret RSA-JCE-01 length=8192\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -245,7 +245,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher AES-JCE-01 test length=256\n" +
+                    "crypt:cipher-test AES-JCE-01 length=256\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -262,7 +262,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher AES-JCE-01 test length=128\n" +
+                    "crypt:cipher-test AES-JCE-01 length=128\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -279,7 +279,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher AES-JCE-01 test length=192\n" +
+                    "crypt:cipher-test AES-JCE-01 length=192\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -296,7 +296,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher -p secret AESWITHRSA-JCE-01 test \n" +
+                    "crypt:cipher-test -p secret AESWITHRSA-JCE-01\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -313,7 +313,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:cipher -p secret AESWITHRSA-BC-01 test\n" +
+                    "crypt:cipher-test -p secret AESWITHRSA-BC-01\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -331,7 +331,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:signer -p secret DSA-BC-01 test length=1024\n" +
+                    "crypt:signer-test -p secret DSA-BC-01 length=1024\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -348,7 +348,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:signer -p secret DSA-BC-01 test length=512\n" +
+                    "crypt:signer-test -p secret DSA-BC-01 length=512\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -365,7 +365,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:signer -p secret DSA-JCE-01 test length=1024\n" +
+                    "crypt:signer-test -p secret DSA-JCE-01 length=1024\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -382,7 +382,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:signer -p secret DSA-JCE-01 test length=512\n" +
+                    "crypt:signer-test -p secret DSA-JCE-01 length=512\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -399,7 +399,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:signer -p secret ECC-BC-01 test stdName=prime192v1\n" +
+                    "crypt:signer-test -p secret ECC-BC-01 stdName=prime192v1\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -416,7 +416,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:signer -p secret ECC-BC-01 test stdName=secp521r1\n" +
+                    "crypt:signer-test -p secret ECC-BC-01 stdName=secp521r1\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -433,7 +433,7 @@ public class KarafCryptTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             scenario.attach(stream, 
-                    "crypt:signer -p secret ECC-BC-01 test stdName=c2tnb431r1\n" +
+                    "crypt:signer-test -p secret ECC-BC-01 stdName=c2tnb431r1\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVJ\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVJ");
@@ -518,7 +518,7 @@ public class KarafCryptTest extends TestCase {
 
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             scenario.attach(stream, 
-                    "access restart\n" +
+                    "access-restart\n" +
                     "a=HJGPODGHHKJNBHJGJHHJVU\n" );
 
             scenario.waitForLogEntry(stream, "HJGPODGHHKJNBHJGJHHJVU");
