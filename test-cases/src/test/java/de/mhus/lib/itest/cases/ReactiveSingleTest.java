@@ -142,6 +142,7 @@ public class ReactiveSingleTest extends TestCase {
 
         scenario.add(new Karaf("karaf", prop.getString("docker.mhus-apache-karaf.version"), 
                 "debug", 
+                "p:18181+:8181",
                 "link:jms:jmsserver",
                 "link:db:dbserver",
                 "link:jaeger:jaeger"
