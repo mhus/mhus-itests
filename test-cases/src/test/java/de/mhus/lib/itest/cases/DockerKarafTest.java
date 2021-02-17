@@ -168,7 +168,10 @@ public class DockerKarafTest extends TestCase {
 //              "e:MYSQL_ROOT_PASSWORD=nein"
 //              );
         // "link:db:dbserver"
-        scenario.add(new Karaf("karaf", prop.getString("docker.mhus-apache-karaf.version"), "debug"));
+        scenario.add(new Karaf("karaf", prop.getString("docker.mhus-apache-karaf.version"), 
+                "debug",
+                "p:8181+:8181"
+                ));
         
         scenario.destroyPrefix();
         scenario.start();
