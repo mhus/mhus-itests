@@ -480,8 +480,8 @@ public class KarafToolsTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "dev-res -y cp default\n" +
-                    "dev-res -y cp disable-debug-log\n" +
+                    "dev-res -y cp karaf-dev/default\n" +
+                    "dev-res -y cp karaf-dev/disable-debug-log\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");

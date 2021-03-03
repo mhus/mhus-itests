@@ -443,7 +443,7 @@ public class KarafRestTest extends TestCase {
             stream.setCapture(true);
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
-                    "dev-res -y cp default\n" +
+                    "dev-res -y cp karaf-dev/default\n" +
                     "blue-create de.mhus.rest.osgi.RestServlet\n" +
                     "blue-create de.mhus.rest.osgi.RestWebSocketServlet\n" +
                     "blue-create de.mhus.rest.osgi.nodes.PublicRestNode\n" +

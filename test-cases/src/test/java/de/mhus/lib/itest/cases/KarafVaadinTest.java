@@ -129,7 +129,7 @@ public class KarafVaadinTest extends TestCase {
             stream.setCapture(true);
             
             scenario.attach(stream, 
-                    "dev-res -y cp default\n" +
+                    "dev-res -y cp karaf-dev/default\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");

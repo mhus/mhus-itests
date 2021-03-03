@@ -580,7 +580,7 @@ public class KarafMicroTest extends TestCase {
             stream.setFilter(new AnsiLogFilter());
 
             scenario.attach(stream, 
-                    "dev-res -y cp examples-jms\n" +
+                    "dev-res -y cp examples-jms/examples-jms\n" +
                     "install -s mvn:de.mhus.micro/micro-oper-jms/7.0.0-SNAPSHOT\n" +
                     "blue-create de.mhus.micro.oper.jms.DefaultOperationsChannel\n" + 
                     "a=HGDFhjasdhz\n" );
@@ -625,7 +625,7 @@ public class KarafMicroTest extends TestCase {
             stream.setCapture(true);
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
-                    "dev-res -y cp default\n" +
+                    "dev-res -y cp karaf-dev/default\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
@@ -678,7 +678,7 @@ public class KarafMicroTest extends TestCase {
             stream.setFilter(new AnsiLogFilter());
 
             scenario.attach(stream, 
-                    "dev-res -y cp examples-jms\n" +
+                    "dev-res -y cp examples-jms/examples-jms\n" +
                     "install -s mvn:de.mhus.micro/micro-oper-jms/7.0.0-SNAPSHOT\n" +
                     "a=HGDFhjasdhz\n" );
             scenario.waitForLogEntry(stream, "HGDFhjasdhz");
@@ -719,8 +719,8 @@ public class KarafMicroTest extends TestCase {
             stream.setCapture(true);
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
-                    "dev-res -y cp default\n" +
-                    "dev-res -y cp disable-debug-log\n" +
+                    "dev-res -y cp karaf-dev/default\n" +
+                    "dev-res -y cp karaf-dev/disable-debug-log\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");

@@ -359,9 +359,9 @@ public class ReactiveMultiTest extends TestCase {
             stream.setCapture(true);
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
-                    "dev-res -y cp default\n" +
-                    "dev-res -y cp examples-reactive-multi\n" +
-                    "dev-res -y cp disable-debug-log\n" +
+                    "dev-res -y cp karaf-dev/default\n" +
+                    "dev-res -y cp examples-reactive/examples-reactive-multi\n" +
+                    "dev-res -y cp karaf-dev/disable-debug-log\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");

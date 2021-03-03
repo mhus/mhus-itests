@@ -102,8 +102,8 @@ public class KarafMongoTest extends TestCase {
             stream.setCapture(true);
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
-                    "dev-res -y cp default\n" +
-                    "dev-res -y cp examples-mongo\n" +
+                    "dev-res -y cp karaf-dev/default\n" +
+                    "dev-res -y cp examples-mongo/examples-mongo\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
