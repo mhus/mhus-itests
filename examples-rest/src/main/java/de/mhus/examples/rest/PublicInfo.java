@@ -8,8 +8,8 @@ import de.mhus.rest.core.CallContext;
 import de.mhus.rest.core.annotation.RestNode;
 import de.mhus.rest.core.api.RestNodeService;
 import de.mhus.rest.core.node.JsonRestNode;
+import de.mhus.rest.core.nodes.PublicRestNode;
 import de.mhus.rest.core.result.JsonResult;
-import de.mhus.rest.osgi.nodes.PublicRestNode;
 
 @RestNode(name = "info", parentNode = PublicRestNode.class)
 @Component(immediate = true, service = RestNodeService.class)

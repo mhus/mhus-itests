@@ -444,11 +444,11 @@ public class KarafRestTest extends TestCase {
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
                     "dev-res -y cp karaf-dev/default\n" +
-                    "blue-create de.mhus.rest.osgi.RestServlet\n" +
-                    "blue-create de.mhus.rest.osgi.RestWebSocketServlet\n" +
-                    "blue-create de.mhus.rest.osgi.nodes.PublicRestNode\n" +
-                    "blue-create de.mhus.rest.osgi.nodes.UserInformationRestNode\n" +
-                    "blue-create de.mhus.rest.osgi.nodes.JwtTokenNode\n" +
+                    "blue-create de.mhus.rest.core.impl.RestServlet\n" +
+                    "blue-create de.mhus.rest.core.impl.RestWebSocketServlet\n" +
+                    "blue-create de.mhus.rest.core.nodes.PublicRestNode\n" +
+                    "blue-create de.mhus.rest.core.nodes.UserInformationRestNode\n" +
+                    "blue-create de.mhus.rest.core.nodes.JwtTokenNode\n" +
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
@@ -487,9 +487,9 @@ public class KarafRestTest extends TestCase {
             assertTrue(pos2 > 0);
             
             out = out.substring(pos1, pos2);
-            assertTrue(out.contains("service-de.mhus.rest.osgi.restservlet.xml"));
+            assertTrue(out.contains("service-de.mhus.rest.core.impl.restservlet.xml"));
 //            assertTrue(out.contains("service-de.mhus.rest.osgi.restwebsocketservlet.xml"));
-            assertTrue(out.contains("service-de.mhus.rest.osgi.restwebsockets"));
+            assertTrue(out.contains("service-de.mhus.rest.core.impl.restwebsockets"));
         }
     }
     

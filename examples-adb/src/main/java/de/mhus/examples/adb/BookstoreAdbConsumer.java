@@ -25,7 +25,7 @@ public class BookstoreAdbConsumer extends AbstractCommonAdbConsumer {
     }
 
     @Override
-    public void collectReferences(Object object, ReferenceCollector collector) {
+    public void collectReferences(Object object, ReferenceCollector collector, String reason) {
         
     }
 
