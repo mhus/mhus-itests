@@ -1,0 +1,6 @@
+
+Build without testing:
+
+----
+mvn install -Dmaven.test.skip=true
+----
