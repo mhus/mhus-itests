@@ -46,6 +46,7 @@
        <module>examples-micro</module>
        <module>examples-vaadin</module>
        <module>examples-reactive</module>
+       <module>karaf-mhus</module>
        <module>test-cases</module>
     </modules>
 
@@ -131,28 +132,11 @@
         <!-- junit 5, unit tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.juniper.version}</version>
-            <scope>compile</scope>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.juniper.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-commons</artifactId>
-            <version>${junit.platform.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-           <groupId>org.junit.platform</groupId>
-           <artifactId>junit-platform-launcher</artifactId>
-           <version>${junit.platform.version}</version>
-            <scope>compile</scope>
-        </dependency>
+
         <!-- Needed by junit -->
         <dependency>
             <groupId>org.hamcrest</groupId>

@@ -19,6 +19,7 @@ import de.mhus.lib.core.MThread;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.tests.TestCase;
 import de.mhus.lib.tests.Warnings;
+import de.mhus.lib.tests.docker.AnsiLogFilter;
 import de.mhus.lib.tests.docker.DockerScenario;
 import de.mhus.lib.tests.docker.Karaf;
 import de.mhus.lib.tests.docker.LogStream;
@@ -476,6 +477,18 @@ public class KarafToolsTest extends TestCase {
             
         }
         
+        // installing activemq is asynchron, need to wait a while before next step
+        MThread.sleep(10000);
+        try (LogStream stream = new LogStream(scenario, "karaf")) {
+            stream.setFilter(new AnsiLogFilter());
+
+            scenario.attach(stream, 
+                    "bundle:install -s mvn:de.mhus.lib.itest/karaf-mhus/"+prop.getString("project.version")+"\n" +
+                    "a=HGDFhjasdhz\n" );
+            scenario.waitForLogEntry(stream, "HGDFhjasdhz");
+        }
+        
+        MThread.sleep(10000);
         try (LogStream stream = new LogStream(scenario, "karaf")) {
             stream.setCapture(true);
             
