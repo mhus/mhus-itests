@@ -115,12 +115,10 @@ public class DockerKarafTest extends TestCase {
                     "a=kjshkjfhjkIUYJGHJK\n" );
 
             scenario.waitForLogEntry(stream, "kjshkjfhjkIUYJGHJK");
-            MThread.sleep(5000); // a long time - wait for configuration manager
 
-            String out = stream.getCaptured();
-
-            assertTrue(out.contains("[doConfigure]"));
-            assertTrue(out.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]"));
+            assertTrue(scenario.waitForLog(60000, 5000, stream, 
+                    c -> c.contains("[doConfigure]") && 
+                    c.contains("[KarafCfgManager::Register PID][de.mhus.osgi.api.services.PersistentWatch]") ) );
         }
     }
 
