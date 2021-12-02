@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.util.logging.Level;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MThread;
@@ -22,10 +25,12 @@ import de.mhus.lib.tests.docker.DockerScenario;
 import de.mhus.lib.tests.docker.Karaf;
 import de.mhus.lib.tests.docker.LogStream;
 
-@Disabled
+//@Disabled
 @TestMethodOrder(OrderAnnotation.class)
 public class KarafMicroTest extends TestCase {
 
+    static String activemqVersion = "5.16.0";
+    
     private static DockerScenario scenario;
     private static MProperties prop;
 
@@ -502,6 +507,64 @@ public class KarafMicroTest extends TestCase {
     @BeforeAll
     public static void startDocker() throws NotFoundException, IOException, InterruptedException {
         
+        de.mhus.lib.tests.TestUtil.configureApacheCommonLogging("org.apache.http.impl.conn.PoolingHttpClientConnectionManager", Level.INFO);
+        {
+            String ln = "org.apache.http.impl.conn.PoolingHttpClientConnectionManager";
+            final Logger logger = LoggerFactory.getLogger(ln);
+            final ch.qos.logback.classic.Logger logger2 = (ch.qos.logback.classic.Logger) logger;
+            logger2.setLevel(ch.qos.logback.classic.Level.WARN);
+        }
+        {
+            String ln = "org.apache.http.headers";
+            final Logger logger = LoggerFactory.getLogger(ln);
+            final ch.qos.logback.classic.Logger logger2 = (ch.qos.logback.classic.Logger) logger;
+            logger2.setLevel(ch.qos.logback.classic.Level.WARN);
+        }
+        {
+            String ln = "org.apache.http.wire";
+            final Logger logger = LoggerFactory.getLogger(ln);
+            final ch.qos.logback.classic.Logger logger2 = (ch.qos.logback.classic.Logger) logger;
+            logger2.setLevel(ch.qos.logback.classic.Level.WARN);
+        }
+        {
+            String ln = "org.apache.http.client.protocol.RequestAddCookies";
+            final Logger logger = LoggerFactory.getLogger(ln);
+            final ch.qos.logback.classic.Logger logger2 = (ch.qos.logback.classic.Logger) logger;
+            logger2.setLevel(ch.qos.logback.classic.Level.WARN);
+        }
+        {
+            String ln = "org.apache.http.client.protocol.RequestAuthCache";
+            final Logger logger = LoggerFactory.getLogger(ln);
+            final ch.qos.logback.classic.Logger logger2 = (ch.qos.logback.classic.Logger) logger;
+            logger2.setLevel(ch.qos.logback.classic.Level.WARN);
+        }
+        {
+            String ln = "org.apache.hc.client5.http.wire";
+            final Logger logger = LoggerFactory.getLogger(ln);
+            final ch.qos.logback.classic.Logger logger2 = (ch.qos.logback.classic.Logger) logger;
+            logger2.setLevel(ch.qos.logback.classic.Level.WARN);
+        }
+        {
+            String ln = "org.apache.hc.client5.http.headers";
+            final Logger logger = LoggerFactory.getLogger(ln);
+            final ch.qos.logback.classic.Logger logger2 = (ch.qos.logback.classic.Logger) logger;
+            logger2.setLevel(ch.qos.logback.classic.Level.WARN);
+        }
+        {
+            String ln = "org.apache.hc.client5.http.impl.classic.MainClientExec";
+            final Logger logger = LoggerFactory.getLogger(ln);
+            final ch.qos.logback.classic.Logger logger2 = (ch.qos.logback.classic.Logger) logger;
+            logger2.setLevel(ch.qos.logback.classic.Level.WARN);
+        }
+        {
+            String ln = "org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager";
+            final Logger logger = LoggerFactory.getLogger(ln);
+            final ch.qos.logback.classic.Logger logger2 = (ch.qos.logback.classic.Logger) logger;
+            logger2.setLevel(ch.qos.logback.classic.Level.WARN);
+        }
+        
+        
+        
         prop = TestUtil.loadProperties();
 
         scenario = new DockerScenario();
@@ -552,7 +615,7 @@ public class KarafMicroTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf1")) {
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
-                "feature:repo-add activemq 5.15.8\n" +
+                "feature:repo-add activemq "+activemqVersion+"\n" +
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
                 "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
                 "feature:install eventadmin mhu-dev mhu-micro mhu-rest mhu-jms\n" +
@@ -654,7 +717,7 @@ public class KarafMicroTest extends TestCase {
         try (LogStream stream = new LogStream(scenario, "karaf2")) {
             stream.setFilter(new AnsiLogFilter());
             scenario.attach(stream, 
-                "feature:repo-add activemq 5.15.8\n" +
+                "feature:repo-add activemq "+activemqVersion+"\n" +
                 "feature:repo-add mvn:org.apache.shiro/shiro-features/"+prop.getString("shiro.version")+"/xml/features\n" + 
                 "feature:repo-add mvn:de.mhus.osgi/mhus-features/"+prop.getString("mhus-parent.version")+"/xml/features\n" +
                 "feature:install eventadmin mhu-dev mhu-micro mhu-jms\n" +

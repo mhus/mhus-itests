@@ -49,7 +49,7 @@ public class BookNode extends ObjectListNode<Book,Book> {
     protected Book doCreateObj(CallContext context) throws IOException, MException {
 
         Book book = new Book();
-        PojoModelFactory schema = getPojoModelFactory();
+        PojoModelFactory schema = MPojo.getAttributesModelFactory();
         MPojo.propertiesToPojo(context.getParameters(), book, schema, null, true);
         book.setIsbn(context.getParameters().getString("isbn")); // force should set isbn
         
@@ -60,7 +60,7 @@ public class BookNode extends ObjectListNode<Book,Book> {
 
     @Override
     protected void doUpdateObj(Book book, CallContext context) throws IOException {
-        PojoModelFactory schema = getPojoModelFactory();
+        PojoModelFactory schema = MPojo.getAttributesModelFactory();
         MPojo.propertiesToPojo(context.getParameters(), book, schema);
     }
 
