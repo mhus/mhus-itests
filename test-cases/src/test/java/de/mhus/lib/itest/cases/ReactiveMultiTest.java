@@ -78,7 +78,7 @@ public class ReactiveMultiTest extends TestCase {
         MStopWatch timerAll = new MStopWatch("all").start();
         int maxId = 9999;
         for (int i = 0; i < STRESS_ROUNDS; i++) {
-            MThread.sleep(MPeriod.MINUTE_IN_MILLISECOUNDS);
+            MThread.sleep(MPeriod.MINUTE_IN_MILLISECONDS);
             int lastMax = maxId;
             MStopWatch timerRound = new MStopWatch("round").start();
             try (LogStream stream = new LogStream(scenario, "karaf0")) {
@@ -117,7 +117,7 @@ public class ReactiveMultiTest extends TestCase {
         
         boolean done = false;
         for (int i = 0; i < 10; i++) { // wait maximal 10 minutes for all processes to stop
-            MThread.sleep(MPeriod.MINUTE_IN_MILLISECOUNDS);
+            MThread.sleep(MPeriod.MINUTE_IN_MILLISECONDS);
             try (LogStream stream = new LogStream(scenario, "karaf0")) {
                 stream.setCapture(true);
                 scenario.exec(stream, new String[] {"/opt/karaf/bin/client"},null,false,null,null,"pcase-list -ta\na=JKHIUY\na=${a}675GH\n");
